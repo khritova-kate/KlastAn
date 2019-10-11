@@ -182,7 +182,7 @@ string My_Interface::ReadCommand(string comma)
     ofstream f;
     double D1,D2,D3,D4;
     int INT1;
-	if(parse(comma).str_("HELP").success()) { this->help_(); return "help"; }
+	if(parse(comma).str_("HELP").success()) { this->help_(); return ""; }
     if(parse(comma).str_("CREATE").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
@@ -225,6 +225,7 @@ string My_Interface::ReadCommand(string comma)
             if(i+4 > FileName1.length() ) return "error (SAVE-ALL name) :: can't open file " + FileName1;
         }
         FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
         C.save_CLOUD_in_file(INT1,FileName1.c_str());
         return "OK";
@@ -238,6 +239,7 @@ string My_Interface::ReadCommand(string comma)
             if(i+4 > FileName1.length() ) return "error (SAVE-ALL name) :: can't open file " + FileName1;
         }
         FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
         C.save_all_clouds(FileName1.c_str());
         return "OK";
@@ -264,16 +266,16 @@ void My_Interface::do_it()
         if(!f) { cout<<"error: Can't open file "<<name<<endl; break; }
             
         char buf[50];   
-        ofstream err("error.txt");
+        ofstream err("saves/error.txt");
+        f.getline(buf,50);
         do
         {
-            f.getline(buf,50); comma = buf;
+            comma = buf;
             res = this->ReadCommand(comma);
             err<<res<<"\n";
             cout<<res<<endl;
         } 
-        while(! parse(comma).str_("EXIT").success() );
-
+        while(!parse(comma).str_("EXIT").success() && f.getline(buf,50) );
         break;
     }
     case 2:
