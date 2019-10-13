@@ -12,9 +12,9 @@ class My_Field
       My_Field (int);
       My_Field ();
       ~My_Field();
-      int        ReturnN   ();                    //N
-      //My_Point2D* RetPoint      (int ,int );      //vosvrashaet tochku pol'a
-      //int        RetCLOUDpower (int );           //chislo toche v gruppe
+      int        ReturnN   ();                   //N
+      My_Point2D* RetPoint      (int ,int );     //vosvrashaet tochku pol'a
+      int        RetCLOUDpower (int );           //chislo toche v gruppe
       //int        NumberOfPOINT ();               //chislo tochek v pole
 
       void PrintCLOUD(int );                     //pechat' oblaka v komandnu'u stroku                

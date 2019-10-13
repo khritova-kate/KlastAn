@@ -21,10 +21,10 @@ class My_Group2D
         //void ChangePOINT(My_Point2D*, int );                //ismenenie odnoj tochki v gruppe
         void AddPointList(int , My_Point2D*);               //dobavlenie massiva tochek
         //int RetNumb();                                      //nomer
-        //int RetN();                                         //chislo tochek
+        int RetN();                                         //chislo tochek
         //double RetCentre_x();                               //zentr oblaka
         //double RetCentre_y(); 
-        //My_Point2D* RetPOINT (int );                        //kaka'a-to tocha oblaka
+        My_Point2D* RetPOINT (int );                        //kaka'a-to tocha oblaka
         void MoveCLOUD(My_Point2D*);                        //sdvig oblaka
         void StretchCLOUD(const double&,const double&);     //rast'agenie oblaka
         void RotateCLOUDcm (double );                       //povorot otnositelno centra mass

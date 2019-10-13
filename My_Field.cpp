@@ -18,8 +18,8 @@ My_Field::~My_Field()
     delete [] clouds_basic;
 } 
 int    My_Field::ReturnN   ()                                         {return N;}
-//My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
-//int    My_Field::RetCLOUDpower (int num)                              {return clouds_basic[num-1].RetN();}
+My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
+int    My_Field::RetCLOUDpower (int num)                              {return clouds_basic[num-1].RetN();}
 /*int    My_Field::NumberOfPOINT ()
 {
     int n_of_points = 0;
