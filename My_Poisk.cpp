@@ -2,7 +2,7 @@
 
 My_Poisk::My_Poisk()
 {
-    clusters = new My_Cluster [70];
+    clusters = new My_Cluster [60];           // !!!
 }
 My_Poisk::~My_Poisk()
 {
@@ -11,7 +11,9 @@ My_Poisk::~My_Poisk()
 void My_Poisk::get_type(int TYPE)                              { type = TYPE; }
 void My_Poisk::addCluster(int nop, My_Point2D** clust_pnt)
 {
-    clusters[++N].AddPointList(nop, clust_pnt);
+    N++;
+    clusters[N].AddPointList(nop, clust_pnt);
+    //clusters[N].printCluster();
 }
 void My_Poisk::printCluster(int num)                           { clusters[num].printCluster(); }
 void My_Poisk::printClasterFILE(int num, const char* FileName) { clusters[num].printClasterFILE(FileName); }

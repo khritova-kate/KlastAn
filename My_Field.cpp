@@ -9,7 +9,7 @@ My_Field::My_Field (int n=0): N(n), N_P(0)
 {
     clouds_basic = new My_Group2D[100];
     clouds = new My_Group2D* [100];
-    Poisk = new My_Poisk [50]; 
+    Poisk = new My_Poisk [20]; 
 }
 My_Field::My_Field (): N(0), N_P(0)
 {
