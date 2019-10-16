@@ -7,6 +7,7 @@ private:
     My_Point2D **PointList;       //massiv ssylok na tochki
 public:
     My_Cluster(int);                                        //constructor
+    My_Cluster();                                           //constructor
     ~My_Cluster();                                          //destructor
     int ReturnN();                                          //chislo tochek
     void printCluster();                                    //pechat' v komadnu'u stroku

@@ -1,10 +1,12 @@
 #include "My_Group2D.h"
+#include "My_Poisk.h"
 
 class My_Field
 {
    private:
-      int N;                                            
-      My_Group2D *clouds_basic; // **clouds; CLOUD** clouds_buff;             
+      int N, N_P;                                            
+      My_Group2D *clouds_basic, **clouds; 
+      My_Poisk *Poisk;            
    public:
 
       // ============================================= creation and simple operations =============================================
@@ -15,7 +17,7 @@ class My_Field
       int        ReturnN   ();                   //N
       My_Point2D* RetPoint      (int ,int );     //vosvrashaet tochku pol'a
       int        RetCLOUDpower (int );           //chislo toche v gruppe
-      //int        NumberOfPOINT ();               //chislo tochek v pole
+      int        NumberOfPOINT ();               //chislo tochek v pole
 
       void PrintCLOUD(int );                     //pechat' oblaka v komandnu'u stroku                
       void PrintCLinFile(int , const char* );    //pchat' v fajl
@@ -28,4 +30,8 @@ class My_Field
       //void AddPointList(int, int, My_Point2D* );                //dobavlenie tochek v oblako
       void AddCLOUD(double, double, double, double, int );      //dobavlenie oblaka
       void star_sky(double, double, double, double, int );      //ravnomerno zapolnennyj tochkami kvadrat
+
+      // ============================================= clust_an :: type 1 =============================================
+
+      void Type1(int );
 };

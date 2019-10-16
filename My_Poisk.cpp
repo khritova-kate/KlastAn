@@ -1,5 +1,6 @@
 #include "My_Poisk.h"
-My_Poisk::My_Poisk(int TYPE): type(TYPE)
+
+My_Poisk::My_Poisk()
 {
     clusters = new My_Cluster [70];
 }
@@ -7,6 +8,7 @@ My_Poisk::~My_Poisk()
 {
     delete [] clusters;
 }
+void My_Poisk::get_type(int TYPE)                              { type = TYPE; }
 void My_Poisk::addCluster(int nop, My_Point2D** clust_pnt)
 {
     clusters[++N].AddPointList(nop, clust_pnt);

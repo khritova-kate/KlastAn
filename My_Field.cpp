@@ -2,30 +2,38 @@
 #include <stdlib.h>
 
 #include "My_Field.h"
+#include "My_Poisk.h"
+#include "My_Type1.h"
 
 // ============================================= creation and simple operations =============================================
       
-My_Field::My_Field (int n=0): N(n) 
+My_Field::My_Field (int n=0): N(n), N_P(0)
 {
-    clouds_basic = new My_Group2D[100]; 
+    clouds_basic = new My_Group2D[100];
+    clouds = new My_Group2D* [100];
+    Poisk = new My_Poisk [50]; 
 }
-My_Field::My_Field (): N(0)
+My_Field::My_Field (): N(0), N_P(0)
 {
-    clouds_basic = new My_Group2D[100]; 
+    clouds_basic = new My_Group2D[100];
+    clouds = new My_Group2D* [100]; 
+    Poisk = new My_Poisk [50]; 
 }
 My_Field::~My_Field()
 {
     delete [] clouds_basic;
+    delete [] clouds;
+    delete [] Poisk;
 } 
 int    My_Field::ReturnN   ()                                         {return N;}
 My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
 int    My_Field::RetCLOUDpower (int num)                              {return clouds_basic[num-1].RetN();}
-/*int    My_Field::NumberOfPOINT ()
+int    My_Field::NumberOfPOINT ()
 {
     int n_of_points = 0;
     for (int i=0;i<N;i++) n_of_points += clouds_basic[i].RetN();
     return n_of_points;
-}*/
+}
 
 void My_Field::PrintCLOUD(int num)                         { clouds_basic[num-1].printCLOUD(); }
 void My_Field::PrintCLinFile(int num, const char* Fname)   { clouds_basic[num-1].printCLOUDinFILE(Fname); }
@@ -39,8 +47,9 @@ void My_Field::StretchCLOUD (int num, My_Point2D *p)       {clouds_basic[num-1].
 //      { clouds_basic[numb_of_cloud-1].AddPointList(n_of_points,pnt); }
 void My_Field::AddCLOUD(double x,double y,double DSPx,double DSPy,int nop)
 {
-    clouds_basic[N]=My_Group2D(x,y,DSPx,DSPy,nop);
+    clouds_basic[N] = My_Group2D(x,y,DSPx,DSPy,nop);
     clouds_basic[N].AssignNumb();
+    clouds[N] = &clouds_basic[N];
     N++;
 }
 void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
@@ -56,6 +65,16 @@ void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
     }
     clouds_basic[N].AddPointList(n,pnt);
     clouds_basic[N].AssignNumb();
+    clouds[N] = &clouds_basic[N];
     N++;
     delete [] pnt;
+}
+
+// ============================================= clust_an :: type 1 =============================================
+
+void My_Field::Type1(int nop, double dis)
+{
+    Poisk[N_P].get_type(1);
+    My_Type1(nop,dis).pnt_(N,clouds).dst_().dst01_().save_(Poisk[N_P]);
+    N_P++;
 }

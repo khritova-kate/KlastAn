@@ -9,6 +9,7 @@ My_Cluster::My_Cluster(int N): n(N)
 {
     PointList = new My_Point2D* [n];
 }
+My_Cluster::My_Cluster()  { n=0; }
 My_Cluster::~My_Cluster()
 {
     delete [] PointList;
@@ -34,11 +35,11 @@ void My_Cluster::PrintAllClasterFile(int num, const char* FileName)
 void My_Cluster::AddPointList (int N, My_Point2D** points)
 {
     n=N;
-    if (!PointList) PointList = new My_Point2D[n];
+    if (!PointList) PointList = new My_Point2D* [n];
     else 
     {
         delete [] PointList;
-        PointList = new My_Point2D[n];
+        PointList = new My_Point2D* [n];
     }
     for (int i=0;i<n;i++) PointList[i] = points[i];
 }
