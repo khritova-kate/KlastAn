@@ -14,6 +14,7 @@ class My_Point2D
        void operator += (const  My_Point2D& ); 
        void operator *= (const  My_Point2D& );
        void AssignNumb();                      // tocke prisvaivaets'a por'adkovy' nomer
+       double Dist (const My_Point2D* );       //rasstoyanie ot dannoy tochki do argumenta
 };
 
 class My_Group2D
@@ -81,11 +82,11 @@ class My_Poisk
 
 class My_Type1
 {
-    public:
-        int nop, distances01, point_mark;  // chislo tochek
-        double dist, distances;            // rasstojanie meshdu tochkami
-        My_Point2D** points;               // massiv ssylok na tochki
     private:
+        int nop, *distances01, *point_mark;  // chislo tochek
+        double dist, *distances;            // rasstojanie meshdu tochkami
+        My_Point2D **points;               // massiv ssylok na tochki
+    public:
         My_Type1(int , double );
         ~My_Type1();
         My_Type1& pnt_(int, My_Group2D**);

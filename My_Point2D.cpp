@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "My_Classes.h"
  
 My_Point2D:: My_Point2D(double xx=0, double yy=0)
@@ -24,4 +26,5 @@ void My_Point2D::AssignNumb()
     static int NUMBER = -1; 
     NUMBER++; 
     numb = NUMBER;
-} 
+}
+double My_Point2D::Dist (const My_Point2D* p) { return sqrt(( x - p->x)*( x - p->x ) + ( y - p->y )*( y - p->y )); } 

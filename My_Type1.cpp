@@ -3,7 +3,7 @@
 My_Type1::My_Type1(int NOP, double D): nop(NOP), dist(D)
 {
     points = new My_Point2D* [nop];
-    distances = new double* [nop*nop];
+    distances = new double [nop*nop];
     distances01 = new int [nop*nop];
     point_mark = new int [nop];
 }
@@ -34,7 +34,7 @@ My_Type1& My_Type1::dst_()
         for (j=i+1; j<nop; j++)
         {
             distances[i*nop + j] = points[i]->Dist(points[j]); 
-            distances[j][i] = distances[i][j];
+            distances[j*nop + i] = distances[i*nop + j];
         }
     }
     return *this;
@@ -44,11 +44,11 @@ My_Type1& My_Type1::dst01_()
     int i,j;
     for (i=0; i<nop; i++)
     {
-        distances_01[i*nop + i] = 1;
+        distances01[i*nop + i] = 1;
         for (j=i+1; j<nop; j++)
         {
-            if (distances[i*nop + j] < dist) {distances_01[i*nop + j] = 1; distances_01[j*nop + i] = 1;}
-            else {distances_01[i*nop + j] = 0; distances_01[j*nop + i] = 0;}
+            if (distances[i*nop + j] < dist) {distances01[i*nop + j] = 1; distances01[j*nop + i] = 1;}
+            else {distances01[i*nop + j] = 0; distances01[j*nop + i] = 0;}
         }
     }
     return *this;
@@ -67,7 +67,7 @@ void My_Type1::save_(My_Poisk Poisk)
             add_marker = 0;
             for(i=0; i<nop; i++) if(point_mark[i] == t)
                 for(j=0; j<nop; j++) 
-                    if(distances_01[i*nop + j] == 1 && point_mark[j] == 0)    // pokryvaushee derevo
+                    if(distances01[i*nop + j] == 1 && point_mark[j] == 0)    // pokryvaushee derevo
                     { 
                         point_mark[j] = t+1;
                         add_marker = 1; 
