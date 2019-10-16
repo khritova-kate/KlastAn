@@ -1,4 +1,4 @@
-#include "My_Point2D.h"
+#include "My_Classes.h"
  
 My_Point2D:: My_Point2D(double xx=0, double yy=0)
 {

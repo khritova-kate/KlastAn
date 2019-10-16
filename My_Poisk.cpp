@@ -1,4 +1,4 @@
-#include "My_Poisk.h"
+#include "My_Classes.h"
 
 My_Poisk::My_Poisk()
 {

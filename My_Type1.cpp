@@ -1,6 +1,4 @@
-#include "My_Type1.h"
-#include "My_Group2D.h"
-#include "My_Poisk.h"
+#include "My_Classes.h"
 
 My_Type1::My_Type1(int NOP, double D): nop(NOP), dist(D)
 {

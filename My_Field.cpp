@@ -2,8 +2,6 @@
 #include <stdlib.h>
 
 #include "My_Field.h"
-#include "My_Poisk.h"
-#include "My_Type1.h"
 
 // ============================================= creation and simple operations =============================================
       

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "My_Cluster.h"
+#include "My_Classes.h"
 
 using namespace std;
 

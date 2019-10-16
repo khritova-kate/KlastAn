@@ -1,5 +1,4 @@
-#include "My_Group2D.h"
-#include "My_Poisk.h"
+#include "My_Classes.h"
 
 class My_Field
 {

@@ -2,7 +2,7 @@
 #include <fstream>
 #include <math.h>
 
-#include "My_Group2D.h"
+#include "My_Classes.h"
 
 #define pi 3.1415926535897932
 
