@@ -1,5 +1,8 @@
 #include "My_Classes.h"
 
+//#include <iostream>
+//using namespace std;
+
 My_Type1::My_Type1(int NOP, double D): nop(NOP), dist(D)
 {
     points = new My_Point2D* [nop];
@@ -53,9 +56,9 @@ My_Type1& My_Type1::dst01_()
     }
     return *this;
 }
-void My_Type1::save_(My_Poisk Poisk)
+int My_Type1::save_(My_Poisk* Poisk)
 {
-    int p_num = 0, i,j,t, add_marker, qual;
+    int p_num = 0, i,j,t, add_marker, qual, nocl = 0;
     for (i=0; i<nop; i++) point_mark[i] = 0;
     My_Point2D** clust_pnt; clust_pnt = new My_Point2D* [nop];
 
@@ -82,10 +85,11 @@ void My_Type1::save_(My_Poisk Poisk)
             point_mark[i]= -1;
             t++; qual++;
         }
-        Poisk.addCluster(qual, clust_pnt);
+        Poisk->addCluster(qual, clust_pnt); nocl++;
 
         qual = p_num; p_num = -1;
-        for (i = qual; i<nop; i++) if(point_mark[i] == 0) p_num = i;
+        for (i = qual; i<nop; i++) if(point_mark[i] == 0) { p_num = i; break; }
     } 
-    delete [] clust_pnt;  
+    delete [] clust_pnt; 
+    return nocl;
 }

@@ -3,12 +3,15 @@
 
 #include "My_Field.h"
 
+//#include <iostream>
+//using namespace std;
+
 // ============================================= creation and simple operations =============================================
       
 My_Field::My_Field (int n=0): N(n), N_P(0)
 {
-    clouds_basic = new My_Group2D[100];
-    clouds = new My_Group2D* [100];
+    clouds_basic = new My_Group2D[30];
+    clouds = new My_Group2D* [30];
     Poisk = new My_Poisk [20]; 
 }
 My_Field::My_Field (): N(0), N_P(0)
@@ -70,9 +73,28 @@ void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
 
 // ============================================= clust_an :: type 1 =============================================
 
-void My_Field::Type1(int nop, double dis)
+int My_Field::Type1(int nop, double dis)
 {
     Poisk[N_P].get_type(1);
-    My_Type1(nop,dis).pnt_(N,clouds).dst_().dst01_().save_(Poisk[N_P]);
+    int nocl = My_Type1(nop,dis).pnt_(N,clouds).dst_().dst01_().save_(&Poisk[N_P]);
     N_P++;
+    return nocl;
+}
+void My_Field::PrintClust(int num_p, int num_cl)
+{
+    Poisk[num_p].printCluster(num_cl);
+}
+void My_Field::PrintClustFILE(int num_p, int num_cl, const char* FileName)
+{
+    Poisk[num_p].printClasterFILE(num_cl,FileName);
+}
+void My_Field::PrintAllClustFILE(int num_p, const char* FileName)
+{
+    Poisk[num_p].PrintAllClasterFile(FileName);
+}
+void My_Field::PrintAllClustTypeFILE(int type, const char* FileName)
+{
+    int i, qual = 0;
+    for (i=0;i < N_P; i++)
+        if(Poisk[i].ret_type() == type) Poisk[i].PrintAllClasterFile(qual++, FileName);
 }

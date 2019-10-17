@@ -16,4 +16,9 @@ public:
     void save_CLOUD_in_file (int, const char*);                 //pechat' oblaka v fajl
     void save_all_clouds    (const char*);                      //pechat' vsekh oblakov v fajl
     void Print_CLOUD(int) ;                                     //pechat' v komandnu'u stroku
+    int ConnCLOUD(double );
+    void print_Clust (int, int);
+    void save_Clust_in_file (int, int, const char*);
+    void save_all_Clust (int, const char*);
+    void save_all_Clust_type (int, const char*);
 };

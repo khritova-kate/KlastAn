@@ -72,25 +72,27 @@ class My_Poisk
         My_Poisk();
         ~My_Poisk();
         void get_type(int);
+        int ret_type();
 
         void addCluster(int, My_Point2D** );                   //dobavlenie clustera
 
         void printCluster(int);                                 //pechat' v komadnu'u stroku
         void printClasterFILE(int, const char* );               //pechat' v fajl
         void PrintAllClasterFile(const char* );                 //dopysyvanie v fajl (kogda mnogo clasterov)
+        void PrintAllClasterFile(int, const char* );                 //dopysyvanie v fajl (kogda mnogo clasterov)
 };
 
 class My_Type1
 {
     private:
         int nop, *distances01, *point_mark;  // chislo tochek
-        double dist, *distances;            // rasstojanie meshdu tochkami
-        My_Point2D **points;               // massiv ssylok na tochki
+        double dist, *distances;             // rasstojanie meshdu tochkami
+        My_Point2D **points;                 // massiv ssylok na tochki
     public:
         My_Type1(int , double );
         ~My_Type1();
         My_Type1& pnt_(int, My_Group2D**);
         My_Type1& dst_();
         My_Type1& dst01_();
-        void save_(My_Poisk );
+        int save_(My_Poisk* );
 };

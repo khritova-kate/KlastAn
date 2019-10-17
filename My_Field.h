@@ -32,5 +32,9 @@ class My_Field
 
       // ============================================= clust_an :: type 1 =============================================
 
-      void Type1(int, double );
+      int Type1(int, double );
+      void PrintClust(int, int );
+      void PrintClustFILE(int, int , const char*);
+      void PrintAllClustFILE(int, const char*);
+      void PrintAllClustTypeFILE(int, const char*);
 };
