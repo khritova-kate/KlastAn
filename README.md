@@ -1,8 +1,8 @@
 # KlastAn
 #### Program files:
 
-My_Point2D.cpp, My_Point2D.h, My_Group2D.cpp,  My_Group2D.h,  My_Field.cpp,  My_Field.h, 
-My_Controller.cpp, My_Controller.h, My_Interface.cpp, My_Interface.h
+*.cpp
+*.h
   
 #### Compiling file: 
 makefile
