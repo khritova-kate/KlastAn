@@ -1,15 +1,23 @@
-CREATE   (double cx, double cy, double DSPx,  ||  create Group with centre ('cx','cy'), dispertion('DSPx','DSPy'), number of points 'N'
-                          double DSPy, int N)     ~ add 1 group to FIELD
-STARSKY  (double xmin, double xmax,           ||  create a Group consisting of 'n' points evenly distributed on a rectangle
-           double ymin, double ymax, int n)       ['xmin';'xmax']x['ymin';'ymax']
-                                                  ~ add 1 group to FIELD
+CREATE      (double cx, double cy, double DSPx, ||  create Group with centre ('cx','cy'), dispertion('DSPx','DSPy'), number 
+                                                    of points 'N'
+                          double DSPy, int N)       ~ add 1 group to FIELD
+STARSKY     (double xmin, double xmax,          ||  create a Group consisting of 'n' points evenly distributed on a rectangle
+              double ymin, double ymax, int n)      ['xmin';'xmax']x['ymin';'ymax']
+                                                    ~ add 1 group to FIELD
 
-MOGR     (int number, double px, double py)   ||  move Group with number 'number' to the point ('px','py')
-STGR     (int number, double dx, double dy)   ||  stretch CLOUD with number 'number' on coefficient ('dx','dy')
-TUGR     (int number, double fi)              ||  turn Group with number 'number' angle 'fi'
+MOGR        (int number, double px, double py)  ||  move Group with number 'number' to the point ('px','py')
+STGR        (int number, double dx, double dy)  ||  stretch CLOUD with number 'number' on coefficient ('dx','dy')
+TUGR        (int number, double fi)             ||  turn Group with number 'number' angle 'fi'
 
-SHOW     (int num)                            ||  print Group with number 'number'
-SAVE     (int number, string file_name)       ||  save Group with number 'number' in file 'file_name'
-SAVE-ALL (string file_name)                   ||  save all Groups in file 'file_name'
+CONGR       (double dis)                        ||  find clusters with property: distance between points less than 'dis'
 
-EXIT                                          ||  stop command input (exit) 
+SHOW        (int num)                           ||  print Group with number 'number'
+SAVE        (int number, string file_name)      ||  save Group with number 'number' in file 'file_name'
+SAVE-ALL    (string file_name)                  ||  save all Groups in file 'file_name'
+
+CL-SHOW     (int num_p, int num_c)              ||  print Cluster with number 'num_c' from Poisk with number 'num_p'
+CL-SAVE     (int num_p, int num_c, string f_n)  ||  save Cluster with number 'num_c' from Poisk with number 'num_p' in file 'f_n'
+CL-SAVE-ALL (int num_p, string file_name)       ||  save all Clusters with from Poisk with number 'num_p' in file 'file_name'
+CL-SAVE-TYPE(int type, string file_name)        ||  save all Clusters with type 'type' in file 'file_name'
+
+EXIT                                            ||  stop command input (exit) 

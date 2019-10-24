@@ -3,6 +3,8 @@
 #include <fstream>
 //#include <iostream>
 
+#define N_OF_ALG_TYPES 1
+
 #include "My_Interface.h"
 
 using namespace std;
@@ -140,28 +142,18 @@ bool parse::success() { return !err; }
 string parse::get_err_info() { return err_info; }
 
 // ============================================================= interface  =============================================================
+string itoa(int n)
+{
+    ostringstream number; string str;
+    number<<n; str = number.str();
+    return str;
+}
 
-My_Interface::My_Interface() {limit = 0;}
+My_Interface::My_Interface() {limit = 0; limit_p = 0;}
 void My_Interface::help_()
 {
     ifstream fin("help.txt");
-    if (!fin) //cout<<"error - (HELP) :: can't open file help.txt\n";
-    {
-        cout<<"CREATE   (double cx, double cy, double DSPx,  ||  create Group with centre ('cx','cy'), dispertion('DSPx','DSPy'), number of points 'N'\n";
-        cout<<"                          double DSPy, int N)     ~ add 1 group to FIELD\n";
-        cout<<"STARSKY  (double xmin, double xmax,           ||  create a Group consisting of 'n' points evenly distributed on a rectangle\n";
-        cout<<"           double ymin, double ymax, int n)       ['xmin';'xmax']x['ymin';'ymax']\n";
-        cout<<"                                                  ~ add 1 group to FIELD\n";
-        cout<<"MOGR     (int number, double px, double py)   ||  move Group with number 'number' to the point ('px','py')\n";
-        cout<<"STGR     (int number, double dx, double dy)   ||  stretch CLOUD with number 'number' on coefficient ('dx','dy')\n";
-        cout<<"TUGR     (int number, double fi)              ||  turn Group with number 'number' angle 'fi'\n";
-        cout<<"\n";
-        cout<<"SHOW     (int num)                            ||  print Group with number 'number'\n";
-        cout<<"SAVE     (int number, string file_name)       ||  save Group with number 'number' in file 'file_name'\n";
-        cout<<"SAVE-ALL (string file_name)                   ||  save all Groups in file 'file_name'\n";
-        cout<<"\n";
-        cout<<"EXIT                                          ||  stop command input (exit)\n";
-    }
+    if (!fin) cout<<"error - (HELP) :: can't open file help.txt\n";
     else
     {
         string str;
@@ -178,57 +170,67 @@ void My_Interface::help_()
 string My_Interface::ReadCommand(string comma)
 {
     if(comma == "") {cout<<"empty input"<<endl; return "EMPTY INPUT";}
-    string FileName1;
+    string FileName1, word;
     ofstream f;
     double D1,D2,D3,D4;
-    int INT1;
-	if(parse(comma).str_("HELP").success()) { this->help_(); return ""; }
+    int INT1, INT2;
+    static int n_of_poisk = 0;
+
+  // =========================================== help exit bas operations ===========================================
+
+    if(parse(comma).str_("HELP").success()) { this->help_(); return ""; }
     if(parse(comma).str_("CREATE").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
         C.createCLOUD(D1,D2,D3,D4,INT1);
-        return "OK";
+        field_chanched = true;
+        return "  OK";
     }
     if(parse(comma).str_("STARSKY").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
         C.createSTARSKY(D1,D2,D3,D4,INT1);
-        return "OK";
+        field_chanched = true;
+        return "  OK";
     }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
     {
         C.turnCLOUD(INT1,D1);
-        return "OK";
+        field_chanched = true;
+        return "  OK";
     }
     if(parse(comma).str_("MOGR").int_(INT1).double_(D1).double_(D2).success())
     {
         C.moveCLOUD(INT1,D1,D2);
-        return "OK";
+        field_chanched = true;
+        return "  OK";
     }
     if(parse(comma).str_("STGR").int_(INT1).double_(D1).double_(D1).success())
     {
         C.stretchCLOUD(INT1,D1,D2);
-        return "OK";
+        field_chanched = true;
+        return "  OK";
     }
     if(parse(comma).str_("SHOW").int_(INT1).success())             //!!!
     {
         if (INT1 > limit || INT1 < 1) return "error (SHOW num) :: no proper group ";
         C.Print_CLOUD(INT1);
-        return "OK";
+        return "  OK";
     }
     if(parse(comma).str_("SAVE").int_(INT1).qrstr_(FileName1).success())
     {
+        if(INT1 > limit || INT1 < 1) return "error (SAVE num name) :: Group with number " + itoa(INT1) + " doesn't exist";
         int i=0;
         while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
         {
             i++;
-            if(i+4 > FileName1.length() ) return "error (SAVE-ALL name) :: can't open file " + FileName1;
+            if(i+4 > FileName1.length() ) return "error (SAVE num name) :: can't open file " + FileName1;
         }
         FileName1.erase(i+4);
         FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
         C.save_CLOUD_in_file(INT1,FileName1.c_str());
-        return "OK";
+        return "  OK";
     }
     if(parse(comma).str_("SAVE-ALL").qrstr_(FileName1).success())
 	{
@@ -242,26 +244,96 @@ string My_Interface::ReadCommand(string comma)
         FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
         C.save_all_clouds(FileName1.c_str());
-        return "OK";
+        return "  OK";
 	}
     if(parse(comma).str_("EXIT").success())
     {
-        return "END";
+        return "  END";
     }
+
+  // ==================================================== type 1 ====================================================
+
+    if(parse(comma).str_("CONGR").double_(D1).success())
+    {
+        limit_p++;
+        if (n_of_poisk > 16) return "error (CONGR dis) :: not enough memory";
+        INT1 = C.ConnCLOUD(D1,field_chanched);
+        field_chanched = false;
+        return "  OK : " + itoa(INT1) + " clusters found";
+    }
+     if(parse(comma).str_("CL-SHOW").int_(INT1).int_(INT2).success())             //!!!
+    {
+        if (INT1 > limit_p || INT1 < 1) return "error (SHOW num) :: no proper Poisk ";
+        if(INT2 < 1) return "error (SHOW num) :: no proper cluster";
+        C.print_Clust(INT1, INT2);
+        return "  OK";
+    }
+    if(parse(comma).str_("CL-SAVE").int_(INT1).int_(INT2).qrstr_(FileName1).success())
+    {
+        if(INT1 > limit_p || INT1 < 1) return "error (SAVE num num name) :: Poisk with number " + itoa(INT1) + " doesn't exist";
+        if(INT2 < 1) return "error (SAVE num num name) :: no proper cluster";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (SAVE num_p num_c name) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+        C.save_Clust_in_file(INT1,INT2,FileName1.c_str());
+    }
+    if(parse(comma).str_("CL-SAVE-ALL").int_(INT1).qrstr_(FileName1).success())
+	{
+        if(INT1 > limit_p || INT1 < 1) return "error (SAVE num num name) :: Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (SAVE-ALL name) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+        C.save_all_Clust(INT1,FileName1.c_str());
+        return "  OK";
+	}
+    if(parse(comma).str_("CL-SAVE-TYPE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if(INT1 < 1 || INT1 > N_OF_ALG_TYPES ) return "error (SAVE-TYPE ... ) : not proper type";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (SAVE-ALL name) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+        C.save_all_Clust_type (INT1, FileName1.c_str());
+        return "  OK";
+    }
+  // ==================================================== type 1 ====================================================
     return "NOT SATED COMMAND";
 }
-void My_Interface::do_it()
+void My_Interface::do_it(char* argv)
 {
-    cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
-    int method;
-    cout<<"> "; cin>>method;
+    int method; bool ne_arg;
+    if(argv == NULL)
+    {
+        cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
+        cout<<"> "; cin>>method;
+        ne_arg = true;
+    }
+    else { method = 1; ne_arg = false; }
     switch (method)
     {
     case 1:
     {
-        string comma = "", res;
-        cout<<"file name > ";
-        string name; cin>>name;
+        string comma = "", name, res;
+        if(ne_arg) { cout<<"file name > "; cin>>name; }
+        else name = argv;
+        
         ifstream f( name.c_str() );
         if(!f) { cout<<"error: Can't open file "<<name<<endl; break; }
             

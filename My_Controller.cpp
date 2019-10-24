@@ -1,6 +1,7 @@
 #include "My_Controller.h"
 
-//#include <stdio.h>
+//#include <iostream>
+//using namespace std;
 
 My_Controller::My_Controller () {}
 My_Controller::~My_Controller() {}
@@ -39,4 +40,24 @@ void My_Controller::save_all_clouds (const char* FileName)
 void My_Controller::Print_CLOUD(int num)
 {
     F.PrintCLOUD(num);
+}
+int My_Controller::ConnCLOUD(double dis, bool need_to_find_dist)
+{
+    return F.Type1(dis, need_to_find_dist);
+}
+void My_Controller::print_Clust (int num_p, int num_c)
+{
+    F.PrintClust(--num_p, --num_c);
+}
+void My_Controller::save_Clust_in_file (int num_p, int num_c, const char* FileName)
+{
+    F.PrintClustFILE(--num_p,--num_c,FileName);
+}
+void My_Controller::save_all_Clust (int num_p, const char* FileName)
+{
+    F.PrintAllClustFILE(--num_p,FileName);
+}
+void My_Controller::save_all_Clust_type (int type, const char* FileName)
+{
+    F.PrintAllClustTypeFILE(type,FileName);
 }

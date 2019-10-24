@@ -1,10 +1,13 @@
-#include "My_Group2D.h"
+#include "My_Classes.h"
 
 class My_Field
 {
    private:
-      int N;                                            
-      My_Group2D *clouds_basic; // **clouds; CLOUD** clouds_buff;             
+      int N, N_P, n_of_points;                  //chislo grupp, poiskov, tochek polja                                 
+      My_Group2D *clouds_basic, **clouds;       //grupy i ssylki na gruppy
+      My_Poisk *Poisk;                          //poiski
+      double *distances;                        //rasstoyanie meshdu tochksmi
+      My_Point2D **points;                      //ssylki na tochki polja
    public:
 
       // ============================================= creation and simple operations =============================================
@@ -12,10 +15,9 @@ class My_Field
       My_Field (int);
       My_Field ();
       ~My_Field();
-      int        ReturnN   ();                    //N
-      //My_Point2D* RetPoint      (int ,int );      //vosvrashaet tochku pol'a
-      //int        RetCLOUDpower (int );           //chislo toche v gruppe
-      //int        NumberOfPOINT ();               //chislo tochek v pole
+      int        ReturnN   ();                   //N
+      My_Point2D* RetPoint      (int ,int );     //vosvrashaet tochku pol'a
+      int        RetCLOUDpower (int );           //chislo toche v gruppe
 
       void PrintCLOUD(int );                     //pechat' oblaka v komandnu'u stroku                
       void PrintCLinFile(int , const char* );    //pchat' v fajl
@@ -28,4 +30,14 @@ class My_Field
       //void AddPointList(int, int, My_Point2D* );                //dobavlenie tochek v oblako
       void AddCLOUD(double, double, double, double, int );      //dobavlenie oblaka
       void star_sky(double, double, double, double, int );      //ravnomerno zapolnennyj tochkami kvadrat
+
+      // ============================================= clust_an :: type 1 =============================================
+
+      void pnt_();
+      void dst_();
+      int Type1(double, bool);
+      void PrintClust(int, int );
+      void PrintClustFILE(int, int , const char*);
+      void PrintAllClustFILE(int, const char*);
+      void PrintAllClustTypeFILE(int, const char*);
 };
