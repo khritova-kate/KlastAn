@@ -5,44 +5,15 @@
 
 My_Type1::My_Type1(int NOP, double D): nop(NOP), dist(D)
 {
-    points = new My_Point2D* [nop];
-    distances = new double [nop*nop];
     distances01 = new int [nop*nop];
     point_mark = new int [nop];
 }
 My_Type1::~My_Type1()
 {
-    delete [] points;
-    delete [] distances;
     delete [] distances01;
     delete [] point_mark;
 }
-My_Type1& My_Type1::pnt_(int nogr, My_Group2D**gr)
-{
-    int i,j,k=0, n;
-    for (i=0; i<nogr; i++)
-    {
-        n = gr[i]->RetN();
-        for (j=0; j < n; j++) points[k+j] = gr[i]->RetPOINT(j);
-        k += gr[i]->RetN();
-    }
-    return *this;
-}
-My_Type1& My_Type1::dst_()
-{
-    int i,j;
-    for (i=0; i<nop; i++)
-    {
-        distances[i*nop + i] = 0;
-        for (j=i+1; j<nop; j++)
-        {
-            distances[i*nop + j] = points[i]->Dist(points[j]); 
-            distances[j*nop + i] = distances[i*nop + j];
-        }
-    }
-    return *this;
-}
-My_Type1& My_Type1::dst01_()
+My_Type1& My_Type1::dst01_(double *distances)
 {
     int i,j;
     for (i=0; i<nop; i++)
@@ -56,7 +27,7 @@ My_Type1& My_Type1::dst01_()
     }
     return *this;
 }
-int My_Type1::save_(My_Poisk* Poisk)
+int My_Type1::save_(My_Poisk* Poisk, My_Point2D** points)
 {
     int p_num = 0, i,j,t, add_marker, qual, nocl = 0;
     for (i=0; i<nop; i++) point_mark[i] = 0;

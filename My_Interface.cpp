@@ -183,27 +183,32 @@ string My_Interface::ReadCommand(string comma)
     {
         limit++;
         C.createCLOUD(D1,D2,D3,D4,INT1);
+        field_chanched = true;
         return "  OK";
     }
     if(parse(comma).str_("STARSKY").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
         C.createSTARSKY(D1,D2,D3,D4,INT1);
+        field_chanched = true;
         return "  OK";
     }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
     {
         C.turnCLOUD(INT1,D1);
+        field_chanched = true;
         return "  OK";
     }
     if(parse(comma).str_("MOGR").int_(INT1).double_(D1).double_(D2).success())
     {
         C.moveCLOUD(INT1,D1,D2);
+        field_chanched = true;
         return "  OK";
     }
     if(parse(comma).str_("STGR").int_(INT1).double_(D1).double_(D1).success())
     {
         C.stretchCLOUD(INT1,D1,D2);
+        field_chanched = true;
         return "  OK";
     }
     if(parse(comma).str_("SHOW").int_(INT1).success())             //!!!
@@ -252,7 +257,8 @@ string My_Interface::ReadCommand(string comma)
     {
         limit_p++;
         if (n_of_poisk > 16) return "error (CONGR dis) :: not enough memory";
-        INT1 = C.ConnCLOUD(D1);
+        INT1 = C.ConnCLOUD(D1,field_chanched);
+        field_chanched = false;
         return "  OK : " + itoa(INT1) + " clusters found";
     }
      if(parse(comma).str_("CL-SHOW").int_(INT1).int_(INT2).success())             //!!!
@@ -310,18 +316,24 @@ string My_Interface::ReadCommand(string comma)
   // ==================================================== type 1 ====================================================
     return "NOT SATED COMMAND";
 }
-void My_Interface::do_it()
+void My_Interface::do_it(char* argv)
 {
-    cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
-    int method;
-    cout<<"> "; cin>>method;
+    int method; bool ne_arg;
+    if(argv == NULL)
+    {
+        cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
+        cout<<"> "; cin>>method;
+        ne_arg = true;
+    }
+    else { method = 1; ne_arg = false; }
     switch (method)
     {
     case 1:
     {
-        string comma = "", res;
-        cout<<"file name > ";
-        string name; cin>>name;
+        string comma = "", name, res;
+        if(ne_arg) { cout<<"file name > "; cin>>name; }
+        else name = argv;
+        
         ifstream f( name.c_str() );
         if(!f) { cout<<"error: Can't open file "<<name<<endl; break; }
             

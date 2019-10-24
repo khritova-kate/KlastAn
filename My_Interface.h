@@ -38,9 +38,10 @@ class My_Interface
     private:
         My_Controller C;                         //controller
         int limit, limit_p;                      //chislo oblacov i poiskov
+        bool field_chanched;
     public:
         My_Interface();                          //inizialisazia
         void help_();                            //pro HELP
         string ReadCommand(string comma) ;       //chtenie comandy
-        void do_it();                            //obshenie s pol'sovatelem
+        void do_it(char*);                 //obshenie s pol'sovatelem
 };

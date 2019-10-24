@@ -41,10 +41,9 @@ void My_Controller::Print_CLOUD(int num)
 {
     F.PrintCLOUD(num);
 }
-int My_Controller::ConnCLOUD(double dis)
+int My_Controller::ConnCLOUD(double dis, bool need_to_find_dist)
 {
-    int nop = F.NumberOfPOINT();
-    return F.Type1(nop, dis);
+    return F.Type1(dis, need_to_find_dist);
 }
 void My_Controller::print_Clust (int num_p, int num_c)
 {

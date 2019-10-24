@@ -3,9 +3,11 @@
 class My_Field
 {
    private:
-      int N, N_P;                                            
-      My_Group2D *clouds_basic, **clouds; 
-      My_Poisk *Poisk;            
+      int N, N_P, n_of_points;                  //chislo grupp, poiskov, tochek polja                                 
+      My_Group2D *clouds_basic, **clouds;       //grupy i ssylki na gruppy
+      My_Poisk *Poisk;                          //poiski
+      double *distances;                        //rasstoyanie meshdu tochksmi
+      My_Point2D **points;                      //ssylki na tochki polja
    public:
 
       // ============================================= creation and simple operations =============================================
@@ -16,7 +18,6 @@ class My_Field
       int        ReturnN   ();                   //N
       My_Point2D* RetPoint      (int ,int );     //vosvrashaet tochku pol'a
       int        RetCLOUDpower (int );           //chislo toche v gruppe
-      int        NumberOfPOINT ();               //chislo tochek v pole
 
       void PrintCLOUD(int );                     //pechat' oblaka v komandnu'u stroku                
       void PrintCLinFile(int , const char* );    //pchat' v fajl
@@ -32,7 +33,9 @@ class My_Field
 
       // ============================================= clust_an :: type 1 =============================================
 
-      int Type1(int, double );
+      void pnt_();
+      void dst_();
+      int Type1(double, bool);
       void PrintClust(int, int );
       void PrintClustFILE(int, int , const char*);
       void PrintAllClustFILE(int, const char*);

@@ -8,33 +8,31 @@
 
 // ============================================= creation and simple operations =============================================
       
-My_Field::My_Field (int n=0): N(n), N_P(0)
+My_Field::My_Field (int n=0): N(n), N_P(0), n_of_points(0)
 {
     clouds_basic = new My_Group2D[30];
     clouds = new My_Group2D* [30];
     Poisk = new My_Poisk [20]; 
 }
-My_Field::My_Field (): N(0), N_P(0)
+My_Field::My_Field (): N(0), N_P(0), n_of_points(0)
 {
     clouds_basic = new My_Group2D[100];
     clouds = new My_Group2D* [100]; 
-    Poisk = new My_Poisk [50]; 
+    Poisk = new My_Poisk [50];
+    distances = NULL;
+    points = NULL;
 }
 My_Field::~My_Field()
 {
     delete [] clouds_basic;
     delete [] clouds;
     delete [] Poisk;
+    if (distances != NULL) delete [] distances;
+    if (points != NULL)    delete [] points;
 } 
 int    My_Field::ReturnN   ()                                         {return N;}
 My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
 int    My_Field::RetCLOUDpower (int num)                              {return clouds_basic[num-1].RetN();}
-int    My_Field::NumberOfPOINT ()
-{
-    int n_of_points = 0;
-    for (int i=0;i<N;i++) n_of_points += clouds_basic[i].RetN();
-    return n_of_points;
-}
 
 void My_Field::PrintCLOUD(int num)                         { clouds_basic[num-1].printCLOUD(); }
 void My_Field::PrintCLinFile(int num, const char* Fname)   { clouds_basic[num-1].printCLOUDinFILE(Fname); }
@@ -51,7 +49,7 @@ void My_Field::AddCLOUD(double x,double y,double DSPx,double DSPy,int nop)
     clouds_basic[N] = My_Group2D(x,y,DSPx,DSPy,nop);
     clouds_basic[N].AssignNumb();
     clouds[N] = &clouds_basic[N];
-    N++;
+    N++; n_of_points += nop;
 }
 void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
 {
@@ -67,16 +65,57 @@ void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
     clouds_basic[N].AddPointList(n,pnt);
     clouds_basic[N].AssignNumb();
     clouds[N] = &clouds_basic[N];
-    N++;
+    N++; n_of_points += n;
     delete [] pnt;
 }
 
 // ============================================= clust_an :: type 1 =============================================
 
-int My_Field::Type1(int nop, double dis)
+void My_Field::pnt_()
+{
+    int i,j,k=0, n;
+
+    if(points == NULL) points = new My_Point2D* [n_of_points];
+    else
+    {
+        delete [] points;
+        points = new My_Point2D* [n_of_points];
+    }
+    for (i=0; i<N; i++)
+    {
+        n = clouds[i]->RetN();
+        for (j=0; j < n; j++) points[k+j] = clouds[i]->RetPOINT(j);
+        k += clouds[i]->RetN();
+    }
+}
+void My_Field::dst_()
+{
+    int i,j;
+    if(distances == NULL) distances = new double [n_of_points*n_of_points];
+    else
+    {
+        delete [] distances;
+        distances = new double [n_of_points*n_of_points];
+    }
+    for (i=0; i<n_of_points; i++)
+    {
+        distances[i*n_of_points + i] = 0;
+        for (j=i+1; j<n_of_points; j++)
+        {
+            distances[i*n_of_points + j] = points[i]->Dist(points[j]); 
+            distances[j*n_of_points + i] = distances[i*n_of_points + j];
+        }
+    }
+}
+int My_Field::Type1(double dis, bool need_to_find_dist)
 {
     Poisk[N_P].get_type(1);
-    int nocl = My_Type1(nop,dis).pnt_(N,clouds).dst_().dst01_().save_(&Poisk[N_P]);
+    if(need_to_find_dist)
+    {
+        this->pnt_();
+        this->dst_();
+    }
+    int nocl = My_Type1(n_of_points,dis).dst01_(distances).save_(&Poisk[N_P], points);
     N_P++;
     return nocl;
 }
