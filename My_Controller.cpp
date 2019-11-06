@@ -34,7 +34,6 @@ void My_Controller::save_CLOUD_in_file(int cloud_number,const char*FileName)
 }
 void My_Controller::save_all_clouds (const char* FileName)
 {
-    //printf("\ngot '%s'\n",FileName);
     F.PrintAllCLinFile_bas(FileName);
 }
 void My_Controller::Print_CLOUD(int num)
@@ -60,4 +59,12 @@ void My_Controller::save_all_Clust (int num_p, const char* FileName)
 void My_Controller::save_all_Clust_type (int type, const char* FileName)
 {
     F.PrintAllClustTypeFILE(type,FileName);
+}
+void My_Controller::k_means (int k, bool need_fill_pnt)
+{
+    F.k_means(k, need_fill_pnt);
+}
+void My_Controller::save_k_means_centres (int num_p, const char* FileName)
+{
+    F.save_centers(--num_p, FileName);
 }

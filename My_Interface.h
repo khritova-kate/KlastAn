@@ -1,6 +1,3 @@
-#include <cstring>
-#include <iostream>
-
 #include "My_Controller.h"
 
 using namespace std;

@@ -40,4 +40,11 @@ class My_Field
       void PrintClustFILE(int, int , const char*);
       void PrintAllClustFILE(int, const char*);
       void PrintAllClustTypeFILE(int, const char*);
+
+     // ============================================= clust_an :: type 3 ============================================= 
+
+      void find_far_away_points (My_Point2D**, int ) ;   //k>1 !!
+      void k_means(int , bool);
+      void save_centers (int , const char* );
+
 };

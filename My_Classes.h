@@ -1,3 +1,8 @@
+#include <cstring>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
 class My_Point2D
 {
    private:
@@ -66,8 +71,9 @@ class My_Cluster
 class My_Poisk
 {
     private:
-        int N, type;
+        int N, type, k_means_K;
         My_Cluster* clusters;
+        My_Point2D* k_means_centers;
     public:
         My_Poisk();
         ~My_Poisk();
@@ -79,7 +85,10 @@ class My_Poisk
         void printCluster(int);                                 //pechat' v komadnu'u stroku
         void printClasterFILE(int, const char* );               //pechat' v fajl
         void PrintAllClasterFile(const char* );                 //dopysyvanie v fajl (kogda mnogo clasterov)
-        void PrintAllClasterFile(int, const char* );                 //dopysyvanie v fajl (kogda mnogo clasterov)
+        void PrintAllClasterFile(int, const char* );            //dopysyvanie v fajl (kogda mnogo clasterov)
+
+        void addCenters (My_Point2D* , int);                    //dobavlenie centrov k-mens v fajl
+        void PrintCentersFile (const char*);                    //vypisyvanie centrov k-mens v fajl
 };
 
 class My_Type1
@@ -92,4 +101,18 @@ class My_Type1
         ~My_Type1();
         My_Type1& dst01_(double *dst);
         int save_(My_Poisk* , My_Point2D**);
+};
+
+class My_Type3
+{
+    private:
+        int nop, *point_mark, k;
+        My_Point2D* centres;
+    public:
+        My_Type3(int,int,My_Point2D**);
+        ~My_Type3();
+        bool centres_group(My_Point2D**);                   //po cenram - gruppu, vosvrashaet true, esli marker tochki ismenils'a, i false inache
+        void group_centres(My_Point2D**);                   //po gruppe centry
+        void save_(My_Poisk*, My_Point2D**);
+        void k_means_centers_(My_Point2D*, My_Point2D**);   //zagrugaet centry v massiv (pnt - massiv tochek gruppy) Achtung pri objavlenii Type3 v Type4
 };

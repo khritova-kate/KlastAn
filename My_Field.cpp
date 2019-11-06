@@ -137,3 +137,80 @@ void My_Field::PrintAllClustTypeFILE(int type, const char* FileName)
     for (i=0;i < N_P; i++)
         if(Poisk[i].ret_type() == type) Poisk[i].PrintAllClasterFile(qual++, FileName);
 }
+
+// ============================================= clust_an :: type 3 =============================================
+
+void My_Field::find_far_away_points (My_Point2D** first_centers, int k) //k>1 !!
+{
+    int* fircen_num = new int [k];
+    fircen_num[0] = 0; fircen_num [1] = 1;
+    double maxdist = distances [1], *dist;
+    for(int i=0; i<n_of_points; i++)
+    {
+        dist = distances + i*n_of_points;
+        for(int j=i+1; j<n_of_points; j++)
+            if( dist[j] > maxdist )
+            {
+                maxdist = dist[j];
+                fircen_num[0] = i;
+                fircen_num[1] = j;
+            }
+    }
+    int t = 2;
+    bool not_counted, not_met;
+    double sum;
+    while (t < k)
+    {
+        not_counted = true; not_met = true;
+        for(int i=0; i<n_of_points; i++)
+        {
+            dist = distances + i*n_of_points;
+            for(int p=0; p<t; p++)
+                if (i == fircen_num[p]) not_met = false;
+            if (not_met)
+                for(int j=i+1; j<n_of_points; j++)
+                {
+                    not_met = true;
+                    for(int p=0; p<t; p++)
+                        if (j == fircen_num[p]) not_met = false;
+                    sum = 0;
+                    if( not_met ) 
+                    {
+                        for(int p=0; p<t; p++) sum += distances[ fircen_num[p]*n_of_points + j ];
+                    }
+                    if( ( not_met && sum > maxdist ) || not_counted )
+                    {
+                        maxdist = sum;
+                        fircen_num[t] = j;
+                        not_counted = false;
+                    }
+                }
+        }
+        t++;
+    }
+    for(int i=0; i<k; i++)
+       first_centers[i] = points[ fircen_num[i] ];
+
+    delete [] fircen_num;
+}
+void My_Field::k_means(int k, bool need_to_fill_pnt)
+{
+    Poisk[N_P].get_type(3);
+    if(need_to_fill_pnt)
+    {
+        this->pnt_();
+        this->dst_();
+    }
+    My_Point2D** first_centers = new My_Point2D* [k];
+    if(k>1) this->find_far_away_points(first_centers, k);
+    else first_centers[0] = points[0];
+
+    My_Type3(n_of_points, k, first_centers).save_(&Poisk[N_P], points);
+
+    delete [] first_centers;
+    N_P++;
+}
+void My_Field::save_centers(int p_num, const char* FileName)
+{
+    Poisk[p_num].PrintCentersFile(FileName);
+}

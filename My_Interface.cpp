@@ -1,10 +1,4 @@
-#include <sstream>
-#include <cstring>
-#include <fstream>
-//#include <iostream>
-
 #define N_OF_ALG_TYPES 1
-
 #include "My_Interface.h"
 
 using namespace std;
@@ -313,7 +307,34 @@ string My_Interface::ReadCommand(string comma)
         C.save_all_Clust_type (INT1, FileName1.c_str());
         return "  OK";
     }
-  // ==================================================== type 1 ====================================================
+  // ==================================================== type 2 ====================================================
+  // ==================================================== type 3 ====================================================
+    if(parse(comma).str_("K-MEANS").int_(INT1).success())
+    {
+        limit_p++;
+        if (INT1 < 1) return "error (K-MEANS ... ) : expected int > 0";
+
+        C.k_means(INT1, field_chanched);
+        
+        field_chanched = false;
+        return "  OK";
+    }
+    if(parse(comma).str_("CEN-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + "doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (SAVE num_p num_c name) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        C.save_k_means_centres(INT1, FileName1.c_str());
+        return "  OK";
+    }
     return "NOT SATED COMMAND";
 }
 void My_Interface::do_it(char* argv)
@@ -343,8 +364,9 @@ void My_Interface::do_it(char* argv)
         do
         {
             comma = buf;
+            cout<<"~ "<<comma<<"\n";
             res = this->ReadCommand(comma);
-            err<<res<<"\n";
+            err<<comma<<" -- "<<res<<"\n";
             cout<<res<<endl;
         } 
         while(!parse(comma).str_("EXIT").success() && f.getline(buf,50) );
