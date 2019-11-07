@@ -6,6 +6,7 @@ My_Poisk::My_Poisk()
 {
     clusters = new My_Cluster [150];           // !!!
     k_means_centers = NULL;
+    k_means_P = 1;
 }
 My_Poisk::~My_Poisk()
 {
@@ -29,17 +30,18 @@ void My_Poisk::addCenters (My_Point2D *centers , int k)
     k_means_K = k;
     k_means_centers = new My_Point2D [k];
     for(int i=0; i<k; i++) k_means_centers[i] = centers[i];
-    cout<<"in add Centers (K = "<<k_means_K<<"):\n";
-    for(int i=0;i<k_means_K;i++) cout<<k_means_centers[i].ReturnX()<<"  "<<k_means_centers[i].ReturnY()<<"  "<<i<<"\n";
+    /*cout<<"in add Centers (K = "<<k_means_K<<"):\n";
+    for(int i=0;i<k_means_K;i++) cout<<k_means_centers[i].ReturnX()<<"  "<<k_means_centers[i].ReturnY()<<"  "<<i<<"\n";*/
 }
+void My_Poisk::get_k_p (int k, int p)   {k_means_K = k; k_means_P = p; }
 void My_Poisk::PrintCentersFile (const char* FileName)
 {
     ofstream fout (FileName);
 
-    cout<<"in Print Centers (K = "<<k_means_K<<"):\n";
-    for(int i=0;i<k_means_K;i++) cout<<k_means_centers[i].ReturnX()<<"  "<<k_means_centers[i].ReturnY()<<"  "<<i<<"\n";
-
+    /*cout<<"in Print Centers (K = "<<k_means_K<<" P = "<<k_means_P<<"):\n";
+    for(int i=0;i<k_means_K*k_means_P;i++) cout<<k_means_centers[i].ReturnX()<<"  "<<k_means_centers[i].ReturnY()<<"  "<<i<<"\n";*/
     for (int i=0; i<k_means_K; i++)
-        fout<<k_means_centers[i].ReturnX()<<"  "<<k_means_centers[i].ReturnY()<<"  "<<i<<"\n";
+        for (int j=0; j<k_means_P; j++)
+            fout<<k_means_centers[i*k_means_P + j].ReturnX()<<"  "<<k_means_centers[i*k_means_P + j].ReturnY()<<"  "<<i<<"\n";
     fout.close();
 }

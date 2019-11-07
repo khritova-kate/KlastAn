@@ -214,3 +214,23 @@ void My_Field::save_centers(int p_num, const char* FileName)
 {
     Poisk[p_num].PrintCentersFile(FileName);
 }
+
+// ============================================= clust_an :: type 4 =============================================
+
+void My_Field::k_means_core(int k, int p, bool need_to_fill_pnt)
+{
+    Poisk[N_P].get_type(4);
+    if(need_to_fill_pnt)
+    {
+        this->pnt_();
+        this->dst_();
+    }
+    My_Point2D** first_centers = new My_Point2D* [k];
+    if(k>1) this->find_far_away_points(first_centers, k);
+    else first_centers[0] = points[0];
+
+    My_Type4(n_of_points,k,p,first_centers).save_(&Poisk[N_P], points, distances);
+
+    delete [] first_centers;
+    N_P++;
+}

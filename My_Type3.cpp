@@ -4,7 +4,7 @@ My_Type3::My_Type3(int n_of_points, int k_means_K, My_Point2D** cnt): nop(n_of_p
 {
     centres = new My_Point2D [k];
     point_mark = new int [nop];
-    for(int i=0; i<k; i++) centres[i] = *cnt[i];
+    for(int i=0; i<k; i++) centres[i] = *cnt[i]; 
 }
 My_Type3::~My_Type3()
 {

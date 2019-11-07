@@ -68,3 +68,7 @@ void My_Controller::save_k_means_centres (int num_p, const char* FileName)
 {
     F.save_centers(--num_p, FileName);
 }
+void My_Controller::k_means_core (int k, int p, bool need_fill_pnt)
+{
+    F.k_means_core(k,p, need_fill_pnt);
+}

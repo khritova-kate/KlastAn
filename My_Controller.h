@@ -21,6 +21,7 @@ public:
 
     int ConnCLOUD(double , bool);
     void k_means (int , bool);
+    void k_means_core (int, int, bool);
     
     void print_Clust (int, int);
     void save_Clust_in_file (int, int, const char*);

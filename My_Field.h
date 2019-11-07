@@ -47,4 +47,7 @@ class My_Field
       void k_means(int , bool);
       void save_centers (int , const char* );
 
+     // ============================================= clust_an :: type 4 ============================================= 
+
+      void k_means_core(int, int, bool);
 };

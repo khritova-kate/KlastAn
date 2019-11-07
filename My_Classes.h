@@ -71,7 +71,7 @@ class My_Cluster
 class My_Poisk
 {
     private:
-        int N, type, k_means_K;
+        int N, type, k_means_K, k_means_P;
         My_Cluster* clusters;
         My_Point2D* k_means_centers;
     public:
@@ -88,6 +88,7 @@ class My_Poisk
         void PrintAllClasterFile(int, const char* );            //dopysyvanie v fajl (kogda mnogo clasterov)
 
         void addCenters (My_Point2D* , int);                    //dobavlenie centrov k-mens v fajl
+        void get_k_p (int, int );
         void PrintCentersFile (const char*);                    //vypisyvanie centrov k-mens v fajl
 };
 
@@ -115,4 +116,19 @@ class My_Type3
         void group_centres(My_Point2D**);                   //po gruppe centry
         void save_(My_Poisk*, My_Point2D**);
         void k_means_centers_(My_Point2D*, My_Point2D**);   //zagrugaet centry v massiv (pnt - massiv tochek gruppy) Achtung pri objavlenii Type3 v Type4
+};
+
+class My_Type4
+{
+    private:
+        int nop, *point_mark, k, p;
+        My_Point2D* cores;
+    public:
+        My_Type4(int,int,int,My_Point2D**);
+        ~My_Type4();
+        bool core_group(My_Point2D**);
+        void group_core(My_Point2D**,double*);
+        void neighbors(double*, My_Point2D**, My_Point2D**);
+        void centres_group(My_Point2D**);
+        void save_(My_Poisk*, My_Point2D**, double*);
 };

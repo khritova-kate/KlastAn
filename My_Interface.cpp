@@ -312,10 +312,9 @@ string My_Interface::ReadCommand(string comma)
     if(parse(comma).str_("K-MEANS").int_(INT1).success())
     {
         limit_p++;
+        if(limit == 0) return "error (K-MEANS ... ) : empty Field";
         if (INT1 < 1) return "error (K-MEANS ... ) : expected int > 0";
-
-        C.k_means(INT1, field_chanched);
-        
+        C.k_means(INT1, field_chanched);    
         field_chanched = false;
         return "  OK";
     }
@@ -333,6 +332,17 @@ string My_Interface::ReadCommand(string comma)
         f.open(FileName1.c_str()); f.close();
 
         C.save_k_means_centres(INT1, FileName1.c_str());
+        return "  OK";
+    }
+    // ==================================================== type 4 ====================================================
+    if (parse(comma).str_("CORE-K-MEANS").int_(INT1).int_(INT2).success())
+    {
+        limit_p++;
+        if(limit == 0) return "error (CORE-K-MEANS ... ) : empty Field";
+        if (INT1 < 1) return "error (CORE-K-MEANS ... ) : expected k > 0";
+        if (INT2 < 1) return "error (CORE-K-MEANS ... ) : expected p > 0";
+        C.k_means_core(INT1,INT2,field_chanched);
+        field_chanched = false;
         return "  OK";
     }
     return "NOT SATED COMMAND";
