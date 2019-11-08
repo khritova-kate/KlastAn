@@ -45,9 +45,14 @@ class My_Field
 
       void find_far_away_points (My_Point2D**, int ) ;   //k>1 !!
       void k_means(int , bool);
-      void save_centers (int , const char* );
+      bool save_centers (int , const char* );
 
      // ============================================= clust_an :: type 4 ============================================= 
 
       void k_means_core(int, int, bool);
+
+     // ============================================= clust_an :: type 5 ============================================= 
+
+      int forel(double, bool);
+      bool save_circles(int, const char*);
 };

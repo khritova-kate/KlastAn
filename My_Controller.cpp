@@ -1,8 +1,5 @@
 #include "My_Controller.h"
 
-//#include <iostream>
-//using namespace std;
-
 My_Controller::My_Controller () {}
 My_Controller::~My_Controller() {}
 //My_Field* My_Controller::RetFIELD() { return &F; }
@@ -64,11 +61,19 @@ void My_Controller::k_means (int k, bool need_fill_pnt)
 {
     F.k_means(k, need_fill_pnt);
 }
-void My_Controller::save_k_means_centres (int num_p, const char* FileName)
+bool My_Controller::save_k_means_centres (int num_p, const char* FileName)
 {
-    F.save_centers(--num_p, FileName);
+    return F.save_centers(--num_p, FileName);
 }
 void My_Controller::k_means_core (int k, int p, bool need_fill_pnt)
 {
     F.k_means_core(k,p, need_fill_pnt);
+}
+int My_Controller::forel(double r, bool need_fill_pnt)
+{
+    return F.forel(r, need_fill_pnt);
+}
+bool My_Controller::save_forel_circles (int p_num, const char* FileName)
+{
+    return F.save_circles(--p_num,FileName);
 }

@@ -2,6 +2,9 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <math.h>
+
+#define eps 1e-15
 
 class My_Point2D
 {
@@ -74,6 +77,7 @@ class My_Poisk
         int N, type, k_means_K, k_means_P;
         My_Cluster* clusters;
         My_Point2D* k_means_centers;
+        double r;
     public:
         My_Poisk();
         ~My_Poisk();
@@ -90,6 +94,9 @@ class My_Poisk
         void addCenters (My_Point2D* , int);                    //dobavlenie centrov k-mens v fajl
         void get_k_p (int, int );
         void PrintCentersFile (const char*);                    //vypisyvanie centrov k-mens v fajl
+
+        void get_r (double );
+        void PrintCircles (const char*);
 };
 
 class My_Type1
@@ -131,4 +138,19 @@ class My_Type4
         void neighbors(double*, My_Point2D**, My_Point2D**);
         void centres_group(My_Point2D**);
         void save_(My_Poisk*, My_Point2D**, double*);
+};
+
+class My_Type5
+{
+    private:
+        int nop, nop_cell, *point_mark, n_cl, nof;
+        double r, start_x, start_y, col_le, line_le;
+        My_Point2D* forel;
+    public:
+        My_Type5(int, double , My_Point2D**);                                 //razbivaem pole na kletki
+        ~My_Type5();                                      
+        int add_to_neigh(int, int, int, int, My_Point2D**, int*, My_Point2D**);
+        int neigh(int, My_Point2D**, My_Point2D**, int*);
+        int static_neigh (int, My_Point2D**, My_Point2D**);
+        int forel_(My_Poisk*, My_Point2D**);
 };

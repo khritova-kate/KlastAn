@@ -35,7 +35,7 @@ class My_Interface
     private:
         My_Controller C;                         //controller
         int limit, limit_p;                      //chislo oblacov i poiskov
-        bool field_chanched;
+        bool need_fill_pnt, need_fill_dst;
     public:
         My_Interface();                          //inizialisazia
         void help_();                            //pro HELP

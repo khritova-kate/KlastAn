@@ -163,7 +163,7 @@ void My_Interface::help_()
 }
 string My_Interface::ReadCommand(string comma)
 {
-    if(comma == "") {cout<<"empty input"<<endl; return "EMPTY INPUT";}
+    if(comma == "") return "EMPTY INPUT";
     string FileName1, word;
     ofstream f;
     double D1,D2,D3,D4;
@@ -177,32 +177,32 @@ string My_Interface::ReadCommand(string comma)
     {
         limit++;
         C.createCLOUD(D1,D2,D3,D4,INT1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt = true;
         return "  OK";
     }
     if(parse(comma).str_("STARSKY").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
         C.createSTARSKY(D1,D2,D3,D4,INT1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
     {
         C.turnCLOUD(INT1,D1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("MOGR").int_(INT1).double_(D1).double_(D2).success())
     {
         C.moveCLOUD(INT1,D1,D2);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("STGR").int_(INT1).double_(D1).double_(D1).success())
     {
         C.stretchCLOUD(INT1,D1,D2);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("SHOW").int_(INT1).success())             //!!!
@@ -251,8 +251,8 @@ string My_Interface::ReadCommand(string comma)
     {
         limit_p++;
         if (n_of_poisk > 16) return "error (CONGR dis) :: not enough memory";
-        INT1 = C.ConnCLOUD(D1,field_chanched);
-        field_chanched = false;
+        INT1 = C.ConnCLOUD(D1, need_fill_pnt && need_fill_dst);
+        need_fill_dst = need_fill_pnt = false;
         return "  OK : " + itoa(INT1) + " clusters found";
     }
      if(parse(comma).str_("CL-SHOW").int_(INT1).int_(INT2).success())             //!!!
@@ -314,36 +314,64 @@ string My_Interface::ReadCommand(string comma)
         limit_p++;
         if(limit == 0) return "error (K-MEANS ... ) : empty Field";
         if (INT1 < 1) return "error (K-MEANS ... ) : expected int > 0";
-        C.k_means(INT1, field_chanched);    
-        field_chanched = false;
+        C.k_means(INT1, need_fill_dst && need_fill_pnt);    
+        need_fill_dst = need_fill_pnt = false;
         return "  OK";
     }
     if(parse(comma).str_("CEN-SAVE").int_(INT1).qrstr_(FileName1).success())
     {
-        if (INT1 > limit_p) return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + "doesn't exist";
+        if (INT1 > limit_p) return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
         int i=0;
         while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
         {
             i++;
-            if(i+4 > FileName1.length() ) return "error (SAVE num_p num_c name) :: can't open file " + FileName1;
+            if(i+4 > FileName1.length() ) return "error (CEN-SAVE ...) :: can't open file " + FileName1;
         }
         FileName1.erase(i+4);
         FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
 
-        C.save_k_means_centres(INT1, FileName1.c_str());
-        return "  OK";
+        if ( C.save_k_means_centres(INT1, FileName1.c_str()) ) return "  OK";
+        return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";
     }
-    // ==================================================== type 4 ====================================================
+  // ==================================================== type 4 ====================================================
     if (parse(comma).str_("CORE-K-MEANS").int_(INT1).int_(INT2).success())
     {
         limit_p++;
         if(limit == 0) return "error (CORE-K-MEANS ... ) : empty Field";
         if (INT1 < 1) return "error (CORE-K-MEANS ... ) : expected k > 0";
         if (INT2 < 1) return "error (CORE-K-MEANS ... ) : expected p > 0";
-        C.k_means_core(INT1,INT2,field_chanched);
-        field_chanched = false;
+        C.k_means_core(INT1,INT2, need_fill_pnt && need_fill_dst);
+        need_fill_dst = need_fill_pnt =  false;
         return "  OK";
+    }
+  // ==================================================== type 5 ====================================================
+    if (parse(comma).str_("FOREL").double_(D1).success())
+    {
+        limit_p++;
+        if(limit == 0) return "error (FOREL ... ) : empty Field";
+        if(D1<0) return "error (FOREL ... ) : expected double > 0";
+
+        INT1 = C.forel(D1, need_fill_pnt);
+        need_fill_pnt = false;
+
+        return "  OK : " + itoa(INT1) + " clusters found";
+    }
+    if (parse(comma).str_("CIR-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (CIR-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (CIR-SAVE ... ) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        if ( C.save_forel_circles(INT1, FileName1.c_str()) ) return "  OK";
+        return "error (CIR-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";
     }
     return "NOT SATED COMMAND";
 }

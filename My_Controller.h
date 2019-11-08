@@ -22,11 +22,13 @@ public:
     int ConnCLOUD(double , bool);
     void k_means (int , bool);
     void k_means_core (int, int, bool);
+    int forel(double, bool);
     
     void print_Clust (int, int);
     void save_Clust_in_file (int, int, const char*);
     void save_all_Clust (int, const char*);
     void save_all_Clust_type (int, const char*);
 
-    void save_k_means_centres (int, const char*);
+    bool save_k_means_centres (int, const char*);
+    bool save_forel_circles (int, const char* );
 };

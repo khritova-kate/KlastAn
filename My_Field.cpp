@@ -210,9 +210,14 @@ void My_Field::k_means(int k, bool need_to_fill_pnt)
     delete [] first_centers;
     N_P++;
 }
-void My_Field::save_centers(int p_num, const char* FileName)
+bool My_Field::save_centers(int p_num, const char* FileName)
 {
-    Poisk[p_num].PrintCentersFile(FileName);
+    if (Poisk[p_num].ret_type() == 3 || Poisk[p_num].ret_type() == 4 || Poisk[p_num].ret_type() == 5)
+    {
+        Poisk[p_num].PrintCentersFile(FileName);
+        return true;
+    }
+    return false;
 }
 
 // ============================================= clust_an :: type 4 =============================================
@@ -233,4 +238,25 @@ void My_Field::k_means_core(int k, int p, bool need_to_fill_pnt)
 
     delete [] first_centers;
     N_P++;
+}
+// ============================================= clust_an :: type 5 =============================================
+
+int My_Field::forel(double r, bool need_to_fill_pnt)
+{
+    Poisk[N_P].get_type(5);
+    if(need_to_fill_pnt) this->pnt_();
+
+    int n_of_clust = My_Type5(n_of_points, r, points).forel_(&Poisk[N_P], points);
+    
+    N_P++;
+    return n_of_clust;
+}
+bool My_Field::save_circles(int num_p, const char* FileName)
+{
+    if (Poisk[num_p].ret_type() == 5)
+    {
+        Poisk[num_p].PrintCircles(FileName);
+        return true;
+    }
+    return false;
 }
