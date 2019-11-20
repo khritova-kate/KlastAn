@@ -57,6 +57,18 @@ void My_Controller::save_all_Clust_type (int type, const char* FileName)
 {
     F.PrintAllClustTypeFILE(type,FileName);
 }
+int My_Controller::SpanningTree (int n_of_barch_col, bool need_pnt_dist)
+{
+    return F.Type2(n_of_barch_col,need_pnt_dist);
+}
+void My_Controller::save_Tree (const char* FileName)
+{
+
+}
+bool My_Controller::save_barchart (int num_p, const char* FileName)
+{
+    return F.save_barch(num_p, FileName);
+}
 void My_Controller::k_means (int k, bool need_fill_pnt)
 {
     F.k_means(k, need_fill_pnt);

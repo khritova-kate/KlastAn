@@ -308,6 +308,41 @@ string My_Interface::ReadCommand(string comma)
         return "  OK";
     }
   // ==================================================== type 2 ====================================================
+    if(parse(comma).str_("SPTREE").int_(INT1).success())
+    {
+        return OK;
+    }
+    if(parse(comma).str_("TREE-SAVE").qrstr_(FileName1).success())
+    {
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (TREE-SAVE ...) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+
+        return OK;
+    }
+    if(parse(comma).str_("BARCH-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (BARCH-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (BARCH-SAVE ...) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+
+        return OK;
+    }
   // ==================================================== type 3 ====================================================
     if(parse(comma).str_("K-MEANS").int_(INT1).success())
     {

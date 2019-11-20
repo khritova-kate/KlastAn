@@ -10,17 +10,17 @@
       
 My_Field::My_Field (int n=0): N(n), N_P(0), n_of_points(0)
 {
-    clouds_basic = new My_Group2D[30];
-    clouds = new My_Group2D* [30];
-    Poisk = new My_Poisk [20]; 
+    clouds_basic = new My_Group2D[N_OF_CLOUDS];
+    clouds = new My_Group2D* [N_OF_CLOUDS];
+    Poisk = new My_Poisk [N_OF_POISK]; 
+    distances = NULL; points = NULL; Tree = NULL;
 }
 My_Field::My_Field (): N(0), N_P(0), n_of_points(0)
 {
-    clouds_basic = new My_Group2D[100];
-    clouds = new My_Group2D* [100]; 
-    Poisk = new My_Poisk [50];
-    distances = NULL;
-    points = NULL;
+    clouds_basic = new My_Group2D[N_OF_CLOUDS];
+    clouds = new My_Group2D* [N_OF_CLOUDS]; 
+    Poisk = new My_Poisk [N_OF_POISK];
+    distances = NULL; points = NULL; Tree = NULL;
 }
 My_Field::~My_Field()
 {
@@ -137,7 +137,39 @@ void My_Field::PrintAllClustTypeFILE(int type, const char* FileName)
     for (i=0;i < N_P; i++)
         if(Poisk[i].ret_type() == type) Poisk[i].PrintAllClasterFile(qual++, FileName);
 }
-
+// ============================================= clust_an :: type 2 =============================================
+int My_Field::Type2(int n_of_barch_col, bool need_pnt_dis)
+{
+    Poisk[N_P].get_type(2);
+    if(need_pnt_dis)
+    {
+        this->pnt_();
+        this->dst_();
+    }
+    int nocl = 1;
+    N_P++;
+    return nocl;
+}
+void My_Field::save_Tree(const char* FileName)
+{
+    if (Tree == NULL)
+    {
+        std::cout<<"Cant save Tree of Distances\n";
+        return;
+    }
+    std::ofstream fout(FileName);
+    int i = 0;
+    while (Tree[i].len > 0)
+    {
+        i++;
+        fout<<Tree[i].begin<<"  "<<Tree[i].end<<"\n\n";
+    }
+}
+bool My_Field::save_barch(int p_num, const char* FileName)
+{
+    if(p_num != 2) return false;
+    return true;
+}
 // ============================================= clust_an :: type 3 =============================================
 
 void My_Field::find_far_away_points (My_Point2D** first_centers, int k) //k>1 !!

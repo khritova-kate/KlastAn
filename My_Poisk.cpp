@@ -4,7 +4,7 @@ using namespace std;
 
 My_Poisk::My_Poisk()
 {
-    clusters = new My_Cluster [150];           // !!!
+    clusters = new My_Cluster [N_OF_CLUSTER];           // !!!
     k_means_centers = NULL;
     k_means_P = 1;
 }

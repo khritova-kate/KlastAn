@@ -20,6 +20,7 @@ public:
     void Print_CLOUD(int) ;                                     //pechat' v komandnu'u stroku
 
     int ConnCLOUD(double , bool);
+    int SpanningTree (int, bool);
     void k_means (int , bool);
     void k_means_core (int, int, bool);
     int forel(double, bool);
@@ -28,7 +29,9 @@ public:
     void save_Clust_in_file (int, int, const char*);
     void save_all_Clust (int, const char*);
     void save_all_Clust_type (int, const char*);
+    void save_Tree (const char*);
 
+    bool save_barchart (int, const char*);
     bool save_k_means_centres (int, const char*);
     bool save_forel_circles (int, const char* );
 };

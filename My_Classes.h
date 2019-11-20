@@ -5,6 +5,19 @@
 #include <math.h>
 
 #define eps 1e-15
+#define pi 3.1415926535897932
+
+#define N_OF_POISK 20
+#define N_OF_CLUSTER 150
+#define N_OF_CLOUDS 30
+#define ITERATIONS 10000
+#define OK "  OK"
+
+struct edge
+{
+    int begin = 0, end = 0;
+    double len = 0;
+};
 
 class My_Point2D
 {
@@ -108,6 +121,22 @@ class My_Type1
         My_Type1(int , double );
         ~My_Type1();
         My_Type1& dst01_(double *dst);
+        int save_(My_Poisk* , My_Point2D**);
+};
+
+class My_Type2
+{
+    private:
+        edge**T;
+        int nop, noc, *pnt_mark;
+        double porog;
+    public:
+        My_Type2(int, int, edge**);
+        ~My_Type2();
+        int min_edge_(int, int*, int*, double*, double*,int);
+        My_Type2& iter_(double *);
+        My_Type2& barch_(My_Poisk*);
+        int find_clust(int , int *, My_Point2D**, My_Point2D** );
         int save_(My_Poisk* , My_Point2D**);
 };
 

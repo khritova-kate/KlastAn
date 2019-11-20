@@ -8,6 +8,7 @@ class My_Field
       My_Poisk *Poisk;                          //poiski
       double *distances;                        //rasstoyanie meshdu tochksmi
       My_Point2D **points;                      //ssylki na tochki polja
+      edge* Tree;                               //tree of distances
    public:
 
       // ============================================= creation and simple operations =============================================
@@ -40,6 +41,12 @@ class My_Field
       void PrintClustFILE(int, int , const char*);
       void PrintAllClustFILE(int, const char*);
       void PrintAllClustTypeFILE(int, const char*);
+
+     // ============================================= clust_an :: type 1 =============================================
+   
+      int Type2(int, bool);
+      void save_Tree(const char*);
+      bool save_barch(int, const char*);
 
      // ============================================= clust_an :: type 3 ============================================= 
 

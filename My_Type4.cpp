@@ -142,8 +142,16 @@ void My_Type4::save_(My_Poisk *Poisk, My_Point2D** pnt, double *distances)
 {
     this->centres_group(pnt);
     this->group_core(pnt, distances);
-    while( this->core_group(pnt) ) this->group_core(pnt, distances);
-
+    int iter_count = 0;
+    while( this->core_group(pnt) ) 
+    {
+        this->group_core(pnt, distances);
+        if(++iter_count > ITERATIONS)
+        {
+            printf("forced stop after %d iterations\n", ITERATIONS);
+            return;
+        }
+    }
     My_Point2D** clust_pnt; clust_pnt = new My_Point2D* [nop];
     int nop_cl;
 
