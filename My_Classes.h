@@ -134,7 +134,7 @@ class My_Type2
         My_Type2(int, int, edge**);
         ~My_Type2();
         int min_edge_(int, int*, int*, double*, double*,int);
-        My_Type2& iter_(double *);
+        My_Type2& tree_(double *);
         My_Type2& barch_(My_Poisk*);
         int find_clust(int , int *, My_Point2D**, My_Point2D** );
         int save_(My_Poisk* , My_Point2D**);

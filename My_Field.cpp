@@ -147,6 +147,9 @@ int My_Field::Type2(int n_of_barch_col, bool need_pnt_dis)
         this->dst_();
     }
     int nocl = 1;
+
+    //My_Type2(n_of_points, n_of_barch_col, &Tree).tree_(distances);
+
     N_P++;
     return nocl;
 }
