@@ -29,6 +29,7 @@ My_Field::~My_Field()
     delete [] Poisk;
     if (distances != NULL) delete [] distances;
     if (points != NULL)    delete [] points;
+    if (Tree != NULL)      delete [] Tree;
 } 
 int    My_Field::ReturnN   ()                                         {return N;}
 My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
@@ -138,6 +139,7 @@ void My_Field::PrintAllClustTypeFILE(int type, const char* FileName)
         if(Poisk[i].ret_type() == type) Poisk[i].PrintAllClasterFile(qual++, FileName);
 }
 // ============================================= clust_an :: type 2 =============================================
+
 int My_Field::Type2(int n_of_barch_col, bool need_pnt_dis)
 {
     Poisk[N_P].get_type(2);
@@ -146,10 +148,16 @@ int My_Field::Type2(int n_of_barch_col, bool need_pnt_dis)
         this->pnt_();
         this->dst_();
     }
-    int nocl = 1;
 
-    //My_Type2(n_of_points, n_of_barch_col, &Tree).tree_(distances);
-
+    int nocl;
+    if(need_pnt_dis) 
+    {
+        Tree = new edge [n_of_points];
+        nocl = My_Type2(n_of_points, n_of_barch_col, &Tree).tree_(distances).barch_(&Poisk[N_P]).save_(&Poisk[N_P], points);
+    }
+    else nocl = My_Type2(n_of_points, n_of_barch_col, &Tree).barch_(&Poisk[N_P]).save_(&Poisk[N_P], points);
+    printf("nocl = %d\n",nocl);
+    
     N_P++;
     return nocl;
 }
@@ -162,15 +170,18 @@ void My_Field::save_Tree(const char* FileName)
     }
     std::ofstream fout(FileName);
     int i = 0;
-    while (Tree[i].len > 0)
+    while (i < n_of_points - 1)
     {
+        fout<<points[ Tree[i].begin ]->ReturnX()<<"  "<<points[ Tree[i].begin ]->ReturnY()<<"\n";
+        fout<<points[ Tree[i].end   ]->ReturnX()<<"  "<<points[ Tree[i].end   ]->ReturnY()<<"\n\n";
         i++;
-        fout<<Tree[i].begin<<"  "<<Tree[i].end<<"\n\n";
     }
+    fout.close();
 }
 bool My_Field::save_barch(int p_num, const char* FileName)
 {
-    if(p_num != 2) return false;
+    if(Poisk[p_num].ret_type() != 2) return false;
+    Poisk[p_num].PrintBarch(FileName);
     return true;
 }
 // ============================================= clust_an :: type 3 =============================================

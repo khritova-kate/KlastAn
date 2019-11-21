@@ -187,6 +187,20 @@ string My_Interface::ReadCommand(string comma)
         need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
+    if(parse(comma).str_("ARC").success())
+    {
+        if(parse(comma).str_("ARC-UP").double_(D1).double_(D2).double_(D3).int_(INT1).success())
+        {
+            if (D3 < 0) return "error (ARC-UP ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC-UP ... ) :: expected int > 1";
+            limit++;
+            C.createARCup(D1,D2,D3,INT1);
+            need_fill_dst = need_fill_pnt =  true;
+        }
+        if(parse(comma).str_("ARC-DOWN").double_(D1).int_(INT1).success()) C.creteARCdown(D1,INT1);
+        if(parse(comma).double_(D1).int_(INT1).success()) printf("full\n");
+        return OK;
+    }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
     {
         C.turnCLOUD(INT1,D1);
@@ -310,6 +324,11 @@ string My_Interface::ReadCommand(string comma)
   // ==================================================== type 2 ====================================================
     if(parse(comma).str_("SPTREE").int_(INT1).success())
     {
+        if (INT1 < 2) return "error (SPTREE ...) :: expected int > 1";
+        C.SpanningTree(INT1, need_fill_pnt && need_fill_dst);
+        limit_p++;
+        need_fill_dst = false; need_fill_pnt = false;
+
         return OK;
     }
     if(parse(comma).str_("TREE-SAVE").qrstr_(FileName1).success())
@@ -324,6 +343,7 @@ string My_Interface::ReadCommand(string comma)
         FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
 
+        C.save_Tree(FileName1.c_str());
 
         return OK;
     }
@@ -340,8 +360,8 @@ string My_Interface::ReadCommand(string comma)
         FileName1 = "saves/" + FileName1;
         f.open(FileName1.c_str()); f.close();
 
-
-        return OK;
+        if ( C.save_barchart(INT1-1, FileName1.c_str()) ) return OK;
+        return "error (BARCH-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";;
     }
   // ==================================================== type 3 ====================================================
     if(parse(comma).str_("K-MEANS").int_(INT1).success())

@@ -11,6 +11,18 @@ void My_Controller::createSTARSKY(double minx,double maxx,double miny,double max
 {
     F.star_sky(minx,maxx,miny,maxy,n);
 }
+void My_Controller::createARCup(double x_cen, double y_cen, double rad, int n)
+{
+
+}
+void My_Controller::createARCdouw(double x_cen, double y_cen, double rad, int n)
+{
+    
+}
+void My_Controller::createARC(double x_cen, double y_cen, double rad, int n)
+{
+    
+}
 void My_Controller::moveCLOUD(int cloud_number, double px, double py)
 {
     My_Point2D p(px,py);
@@ -63,7 +75,7 @@ int My_Controller::SpanningTree (int n_of_barch_col, bool need_pnt_dist)
 }
 void My_Controller::save_Tree (const char* FileName)
 {
-
+    F.save_Tree(FileName);
 }
 bool My_Controller::save_barchart (int num_p, const char* FileName)
 {

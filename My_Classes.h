@@ -8,7 +8,6 @@
 #define pi 3.1415926535897932
 
 #define N_OF_POISK 20
-#define N_OF_CLUSTER 150
 #define N_OF_CLOUDS 30
 #define ITERATIONS 10000
 #define OK "  OK"
@@ -87,7 +86,7 @@ class My_Cluster
 class My_Poisk
 {
     private:
-        int N, type, k_means_K, k_means_P;
+        int N, type, n_of_col, *barchart, k_means_K, k_means_P;
         My_Cluster* clusters;
         My_Point2D* k_means_centers;
         double r;
@@ -103,6 +102,9 @@ class My_Poisk
         void printClasterFILE(int, const char* );               //pechat' v fajl
         void PrintAllClasterFile(const char* );                 //dopysyvanie v fajl (kogda mnogo clasterov)
         void PrintAllClasterFile(int, const char* );            //dopysyvanie v fajl (kogda mnogo clasterov)
+
+        void get_barch(int, int*);
+        void PrintBarch(const char*);
 
         void addCenters (My_Point2D* , int);                    //dobavlenie centrov k-mens v fajl
         void get_k_p (int, int );
@@ -127,7 +129,7 @@ class My_Type1
 class My_Type2
 {
     private:
-        edge**T;
+        edge *T;
         int nop, noc, *pnt_mark;
         double porog;
     public:

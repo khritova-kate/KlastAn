@@ -1,4 +1,5 @@
 #include "My_Classes.h"
+#define N_OF_CLUSTER 500
 
 using namespace std;
 
@@ -11,6 +12,7 @@ My_Poisk::My_Poisk()
 My_Poisk::~My_Poisk()
 {
     delete [] clusters;
+    if (barchart != NULL) delete [] barchart;
     if (k_means_centers != NULL) delete [] k_means_centers;
 }
 void My_Poisk::get_type(int TYPE)                              { type = TYPE; }
@@ -24,6 +26,20 @@ void My_Poisk::printCluster(int num)                           { clusters[num].p
 void My_Poisk::printClasterFILE(int num, const char* FileName) { clusters[num].printClasterFILE(FileName); }
 void My_Poisk::PrintAllClasterFile(const char* FileName)       { for(int i=0;i<N;i++) clusters[i].PrintAllClasterFile(i,FileName); }
 void My_Poisk::PrintAllClasterFile(int n, const char* FileName){ for(int i=0;i<N;i++) clusters[i].PrintAllClasterFile(n+i,FileName); }
+
+void My_Poisk::get_barch(int noc, int *barch)
+{
+    n_of_col = noc;
+    barchart = new int [noc];
+    for (int i = 0; i < noc; i++) barchart[i] = barch[i];
+}
+void My_Poisk::PrintBarch(const char* FileName)
+{
+    ofstream fout(FileName);
+    for(int i = 0; i < n_of_col; i++)
+        fout<<i<<"  "<<barchart[i]<<"\n";
+    fout.close();
+}
 
 void My_Poisk::addCenters (My_Point2D *centers , int k)
 {
