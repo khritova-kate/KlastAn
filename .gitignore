@@ -2,3 +2,5 @@
 *.out
 saves/
 comma*.txt
+makefile.txt
+gitignore
