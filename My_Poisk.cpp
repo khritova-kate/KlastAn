@@ -1,5 +1,4 @@
 #include "My_Classes.h"
-#define N_OF_CLUSTER 500
 
 using namespace std;
 

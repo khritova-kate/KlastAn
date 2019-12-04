@@ -87,7 +87,7 @@ My_Type2& My_Type2::barch_(My_Poisk* Poisk)
     while (barch[i]  > 0 && i < noc) {i++;} step_1 = i;
     while (barch[i] == 0 && i < noc) {i++;} step_2 = (i >= step_1 ? i : noc - 1 + step_1);
     porog = (step_1 == step_2 ? max_dist+delta : (step_2 - step_1)*delta);
-    printf("porog = %.3lf\n", porog);
+    printf("  porog = %.3lf\n", porog);
 
     delete [] barch;
     return *this;

@@ -1,7 +1,7 @@
 #include "My_Controller.h"
 
 My_Controller::My_Controller () {}
-My_Controller::~My_Controller() {}
+My_Controller::~My_Controller() { }
 //My_Field* My_Controller::RetFIELD() { return &F; }
 void My_Controller::createCLOUD(double cx, double cy, double DSPx, double DSPy, int n)
 {
@@ -11,17 +11,17 @@ void My_Controller::createSTARSKY(double minx,double maxx,double miny,double max
 {
     F.star_sky(minx,maxx,miny,maxy,n);
 }
-void My_Controller::createARCup(double x_cen, double y_cen, double rad, int n)
+void My_Controller::createARCup(double x_cen, double y_cen, double rad, int n, double width)
 {
-
+    F.arc_up(x_cen,y_cen,rad,n,width);
 }
-void My_Controller::createARCdouw(double x_cen, double y_cen, double rad, int n)
+void My_Controller::createARCdown(double x_cen, double y_cen, double rad, int n, double width)
 {
-    
+    F.arc_down(x_cen,y_cen,rad,n,width);
 }
-void My_Controller::createARC(double x_cen, double y_cen, double rad, int n)
+void My_Controller::createARC(double x_cen, double y_cen, double rad, int n, double width)
 {
-    
+    F.arc(x_cen,y_cen,rad,n,width);
 }
 void My_Controller::moveCLOUD(int cloud_number, double px, double py)
 {

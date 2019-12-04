@@ -32,7 +32,12 @@ My_Group2D::My_Group2D(double xx, double yy, double DSPxx, double DSPyy, int N):
         for (i=0;i<n;i++) PointList[i] += inaccuracy;
     }
 }
-My_Group2D::~My_Group2D() {delete [] PointList;}
+My_Group2D::~My_Group2D() 
+{
+    //printf("GROUP: deleting\n");
+    delete [] PointList;
+    //printf("GROUP: ok\n");
+}
 My_Group2D::My_Group2D (const My_Group2D& cl)
 {
     x = cl.x; y = cl.y;

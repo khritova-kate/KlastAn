@@ -7,9 +7,14 @@
 #define eps 1e-15
 #define pi 3.1415926535897932
 
-#define N_OF_POISK 20
+#define N_OF_POISK 10
 #define N_OF_CLOUDS 30
-#define ITERATIONS 10000
+#define ITERATIONS 1000
+#define N_OF_CLUSTER 300
+/*#define N_OF_POISK 2
+#define N_OF_CLOUDS 10
+#define ITERATIONS 1000
+#define N_OF_CLUSTER 50*/
 #define OK "  OK"
 
 struct edge

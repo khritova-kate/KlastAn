@@ -38,7 +38,8 @@ class My_Interface
         bool need_fill_pnt, need_fill_dst;
     public:
         My_Interface();                          //inizialisazia
+        ~My_Interface();
         void help_();                            //pro HELP
         string ReadCommand(string comma) ;       //chtenie comandy
-        void do_it(char*);                 //obshenie s pol'sovatelem
+        void do_it(int, char*);                 //obshenie s pol'sovatelem
 };

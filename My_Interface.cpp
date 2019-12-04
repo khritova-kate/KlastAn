@@ -144,6 +144,7 @@ string itoa(int n)
 }
 
 My_Interface::My_Interface() {limit = 0; limit_p = 0;}
+My_Interface::~My_Interface() {}
 void My_Interface::help_()
 {
     ifstream fin("help.txt");
@@ -189,16 +190,30 @@ string My_Interface::ReadCommand(string comma)
     }
     if(parse(comma).str_("ARC").success())
     {
-        if(parse(comma).str_("ARC-UP").double_(D1).double_(D2).double_(D3).int_(INT1).success())
+        if(parse(comma).str_("ARC-UP").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
         {
             if (D3 < 0) return "error (ARC-UP ... ) :: expected red > 0";
             if (INT1 < 1) return "error (ARC-UP ... ) :: expected int > 1";
             limit++;
-            C.createARCup(D1,D2,D3,INT1);
+            C.createARCup(D1,D2,D3,INT1,D4);
             need_fill_dst = need_fill_pnt =  true;
         }
-        if(parse(comma).str_("ARC-DOWN").double_(D1).int_(INT1).success()) C.creteARCdown(D1,INT1);
-        if(parse(comma).double_(D1).int_(INT1).success()) printf("full\n");
+        if(parse(comma).str_("ARC-DOWN").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
+        {
+            if (D3 < 0) return "error (ARC-DOWN ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC-DOWN ... ) :: expected int > 1";
+            limit++;
+            C.createARCdown(D1,D2,D3,INT1,D4);
+            need_fill_dst = need_fill_pnt =  true;
+        }
+        if(parse(comma).str_("ARC").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
+        {
+            if (D3 < 0) return "error (ARC ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC ... ) :: expected int > 1";
+            limit++;
+            C.createARC(D1,D2,D3,INT1,D4);
+            need_fill_dst = need_fill_pnt =  true;
+        }
         return OK;
     }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
@@ -430,10 +445,10 @@ string My_Interface::ReadCommand(string comma)
     }
     return "NOT SATED COMMAND";
 }
-void My_Interface::do_it(char* argv)
+void My_Interface::do_it(int argc, char* argv)
 {
     int method; bool ne_arg;
-    if(argv == NULL)
+    if(argc == 1)
     {
         cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
         cout<<"> "; cin>>method;

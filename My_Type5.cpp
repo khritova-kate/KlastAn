@@ -1,13 +1,9 @@
 #include "My_Classes.h"
 using namespace std;
 
-My_Type5::My_Type5(int n_of_pnt, double R, /*int NOP_cell,*/ My_Point2D**pnt): nop(n_of_pnt), r(R)//, nop_cell(NOP_cell)
+My_Type5::My_Type5(int n_of_pnt, double R, My_Point2D**pnt): nop(n_of_pnt), r(R)
 {
     point_mark = new int [3*nop];
-
-   // n_cl = int (sqrt(nop/nop_cell) );
-   // if(n_cl < 2) n_cl=2;
-   // cout<<"n_cl = "<<n_cl<<"\n";
 
     double end_x = pnt[0]->ReturnX(), end_y = pnt[0]->ReturnY();
     double x,y;
@@ -20,14 +16,11 @@ My_Type5::My_Type5(int n_of_pnt, double R, /*int NOP_cell,*/ My_Point2D**pnt): n
         if(y < start_y) start_y = y;
         if(y >  end_y ) end_y = y;
     }
-    //cout<<"x: "<<start_x<<" "<<end_x<<"\n"<<"y: "<<start_y<<" "<<end_y<<"\n";
     n_cl = max( int( (end_x - start_x) / (2*r) ), int( (end_y - start_y) / (2*r) ) );
     if(n_cl < 2) n_cl = 2;
-    //cout<<"n_cl = "<<n_cl<<"\n";
 
     col_le =  (end_x - start_x)/n_cl;
     line_le = (end_y - start_y)/n_cl;
-    //cout<<"cell: "<<col_le<<" * "<<line_le<<"\n";
 
     int mark;
     for(int i=0; i<nop; i++)
@@ -40,9 +33,7 @@ My_Type5::My_Type5(int n_of_pnt, double R, /*int NOP_cell,*/ My_Point2D**pnt): n
     }
 
     nof = int ( (n_cl*n_cl*line_le*col_le) / (r*r) ) + 1;
-    //cout<<"nof "<<nof<<"\n";
     nof = (nof > nop ? nop : nof);
-    //cout<<"nof "<<nof<<"\n";
     forel = new My_Point2D [nof];
 }
 My_Type5::~My_Type5()
@@ -52,7 +43,6 @@ My_Type5::~My_Type5()
 }
 int My_Type5::add_to_neigh (int t, int pnc, int pnl, int cen_num, My_Point2D **neigh, int *numpp, My_Point2D **pnt)
 {
-    //cout<<"add_to_neigh :: (t, pnc, pnl, cen_num) "<<t<<" "<<pnc<<" "<<pnl<<" "<<cen_num<<"\n";
     for (int i=0; i<nop; i++ )
         if( point_mark[3*i] == pnc && point_mark[3*i + 1] == pnl && point_mark[3*i + 2] == -1 &&
             forel[cen_num].Dist(pnt[i]) < r )
@@ -64,7 +54,6 @@ int My_Type5::add_to_neigh (int t, int pnc, int pnl, int cen_num, My_Point2D **n
 }
 int My_Type5::neigh(int cen_num, My_Point2D **neigh, My_Point2D **pnt, int *numpp)
 {
-    //cout<<"neigh :: (cen_num) "<<cen_num<<"\n";
     int pnc,pnl,t=0;
     pnc = int( ( forel[cen_num].ReturnX() - start_x) / col_le );
     pnc = (pnc < n_cl ? pnc : n_cl-1);
@@ -105,7 +94,6 @@ int My_Type5::neigh(int cen_num, My_Point2D **neigh, My_Point2D **pnt, int *nump
 }
 int My_Type5::static_neigh (int cen_num, My_Point2D**neigh, My_Point2D**pnt)
 {
-    //cout<<"static neigh :: (cen_num) "<<cen_num<<"\n";
     bool centre_moved = true;
     double sumx,sumy;
     int nop_neigh, *numpp_neigh;
@@ -117,23 +105,17 @@ int My_Type5::static_neigh (int cen_num, My_Point2D**neigh, My_Point2D**pnt)
         centre_moved = false;
         
         nop_neigh = this->neigh(cen_num, neigh, pnt, numpp_neigh);
-        //cout<<"found"<<nop_neigh<<"\n";
         for(int i=0; i<nop_neigh; i++) 
         {
             sumx += neigh[i]->ReturnX(); 
             sumy += neigh[i]->ReturnY();
         }
         sumx = sumx/nop_neigh; sumy = sumy/nop_neigh;
-        //cout<<"x -- x_cen : "<<sumx<<" -- "<<forel[cen_num].ReturnX()<<"\n";
-        //cout<<"y -- y_cen : "<<sumy<<" -- "<<forel[cen_num].ReturnY()<<"\n";
         if( fabs(forel[cen_num].ReturnX() - sumx) > eps || 
             fabs(forel[cen_num].ReturnY() - sumy) > eps ) centre_moved = true;
         forel[cen_num] = My_Point2D(sumx, sumy);
     }
     for(int i=0; i<nop_neigh; i++) point_mark[ 3*numpp_neigh[i] + 2 ] = cen_num;
-    //cout<<"progress:\n";
-    //for(int i=0; i<nop; i++) cout<<point_mark[3*i+2]<<" ";
-    //cout<<"\n";
 
     delete [] numpp_neigh;
     return nop_neigh;
@@ -151,7 +133,6 @@ int My_Type5::forel_(My_Poisk *P, My_Point2D** pnt)
         nop_neigh = this->static_neigh(nocl++, neigh, pnt);
         P->addCluster(nop_neigh,neigh);
         markered += nop_neigh;
-        //cout<<"markered = "<<markered<<"\n";
     }
     P->addCenters(forel,nocl);
     P->get_r(r);

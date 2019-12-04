@@ -31,6 +31,9 @@ class My_Field
       //void AddPointList(int, int, My_Point2D* );                //dobavlenie tochek v oblako
       void AddCLOUD(double, double, double, double, int );      //dobavlenie oblaka
       void star_sky(double, double, double, double, int );      //ravnomerno zapolnennyj tochkami kvadrat
+      void arc_up  (double, double, double, int, double);
+      void arc_down(double, double, double, int, double);
+      void arc     (double, double, double, int, double);
 
       // ============================================= clust_an :: type 1 =============================================
 

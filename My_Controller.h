@@ -10,9 +10,9 @@ public:
     //My_Field* RetFIELD();                                       //vernut' pole
     void createCLOUD  (double, double, double, double, int);    //sozdat' oblako
     void createSTARSKY(double, double, double, double, int);    //ravnomerno zapolnennyj kvadrat
-    void createARCup  (double, double, double, int);
-    void createARCdown(double, double, double, int);
-    void createARC    (double, double, double, int);
+    void createARCup  (double, double, double, int, double);
+    void createARCdown(double, double, double, int, double);
+    void createARC    (double, double, double, int, double);
 
     void moveCLOUD    (int, double, double);                    //sdvig oblaka
     void stretchCLOUD (int, double, double);                    //rast'agenie

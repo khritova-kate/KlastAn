@@ -1,10 +1,8 @@
-#include <time.h>
-#include <stdlib.h>
-
 #include "My_Field.h"
 
-//#include <iostream>
-//using namespace std;
+static bool have_tree = false;
+static bool have_pnt = false;
+static bool have_dst = false;
 
 // ============================================= creation and simple operations =============================================
       
@@ -13,23 +11,21 @@ My_Field::My_Field (int n=0): N(n), N_P(0), n_of_points(0)
     clouds_basic = new My_Group2D[N_OF_CLOUDS];
     clouds = new My_Group2D* [N_OF_CLOUDS];
     Poisk = new My_Poisk [N_OF_POISK]; 
-    distances = NULL; points = NULL; Tree = NULL;
 }
 My_Field::My_Field (): N(0), N_P(0), n_of_points(0)
 {
     clouds_basic = new My_Group2D[N_OF_CLOUDS];
     clouds = new My_Group2D* [N_OF_CLOUDS]; 
     Poisk = new My_Poisk [N_OF_POISK];
-    distances = NULL; points = NULL; Tree = NULL;
 }
 My_Field::~My_Field()
 {
     delete [] clouds_basic;
     delete [] clouds;
     delete [] Poisk;
-    if (distances != NULL) delete [] distances;
-    if (points != NULL)    delete [] points;
-    if (Tree != NULL)      delete [] Tree;
+    if (have_dst ) delete [] distances;
+    if (have_pnt ) delete [] points;
+    if (have_tree) delete [] Tree;
 } 
 int    My_Field::ReturnN   ()                                         {return N;}
 My_Point2D* My_Field::RetPoint      (int num_of_cloud,int num_of_pnt) {return clouds_basic[num_of_cloud-1].RetPOINT(num_of_pnt);}
@@ -69,6 +65,57 @@ void My_Field::star_sky(double minx,double maxx,double miny,double maxy, int n)
     N++; n_of_points += n;
     delete [] pnt;
 }
+void My_Field::arc_up(double x_cen, double y_cen, double rad, int n, double width)
+{
+    My_Point2D *pnt; pnt = new My_Point2D [n];
+    double delta = pi/(n-1), x, y;
+    srand(time(NULL));
+    for(int i = 0; i < n; i++)
+    {
+        x = x_cen + rad*cos(delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        y = y_cen + rad*sin(delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        pnt[i] = My_Point2D(x,y);
+    }
+    clouds_basic[N].AddPointList(n,pnt);
+    clouds_basic[N].AssignNumb();
+    clouds[N] = &clouds_basic[N];
+    N++; n_of_points += n;
+    delete [] pnt;
+}
+void My_Field::arc_down(double x_cen, double y_cen, double rad, int n, double width)
+{
+    My_Point2D *pnt; pnt = new My_Point2D [n];
+    double delta = pi/(n-1), x, y;
+    srand(time(NULL));
+    for(int i = 0; i < n; i++)
+    {
+        x = x_cen + rad*cos(- delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        y = y_cen + rad*sin(- delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        pnt[i] = My_Point2D(x,y);
+    }
+    clouds_basic[N].AddPointList(n,pnt);
+    clouds_basic[N].AssignNumb();
+    clouds[N] = &clouds_basic[N];
+    N++; n_of_points += n;
+    delete [] pnt;
+}
+void My_Field::arc(double x_cen, double y_cen, double rad, int n, double width)
+{
+    My_Point2D *pnt; pnt = new My_Point2D [n];
+    double delta = 2*pi/(n-1), x, y;
+    srand(time(NULL));
+    for(int i = 0; i < n; i++)
+    {
+        x = x_cen + rad*cos(delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        y = y_cen + rad*sin(delta*i) + rad*width*(rand() %1000 - 1000)*0.0001;
+        pnt[i] = My_Point2D(x,y);
+    }
+    clouds_basic[N].AddPointList(n,pnt);
+    clouds_basic[N].AssignNumb();
+    clouds[N] = &clouds_basic[N];
+    N++; n_of_points += n;
+    delete [] pnt;
+}
 
 // ============================================= clust_an :: type 1 =============================================
 
@@ -76,7 +123,7 @@ void My_Field::pnt_()
 {
     int i,j,k=0, n;
 
-    if(points == NULL) points = new My_Point2D* [n_of_points];
+    if(!have_pnt) points = new My_Point2D* [n_of_points];
     else
     {
         delete [] points;
@@ -88,11 +135,14 @@ void My_Field::pnt_()
         for (j=0; j < n; j++) points[k+j] = clouds[i]->RetPOINT(j);
         k += clouds[i]->RetN();
     }
+
+    have_pnt = true;
 }
 void My_Field::dst_()
 {
     int i,j;
-    if(distances == NULL) distances = new double [n_of_points*n_of_points];
+
+    if(!have_dst) distances = new double [n_of_points*n_of_points];
     else
     {
         delete [] distances;
@@ -107,6 +157,8 @@ void My_Field::dst_()
             distances[j*n_of_points + i] = distances[i*n_of_points + j];
         }
     }
+
+    have_dst = true;
 }
 int My_Field::Type1(double dis, bool need_to_find_dist)
 {
@@ -150,20 +202,30 @@ int My_Field::Type2(int n_of_barch_col, bool need_pnt_dis)
     }
 
     int nocl;
+
     if(need_pnt_dis) 
     {
-        Tree = new edge [n_of_points];
+        if(!have_tree) 
+        {
+            Tree = new edge [n_of_points];
+            have_tree = true;
+        }
+        else
+        {
+            delete [] Tree;
+            Tree = new edge [n_of_points];
+        }
         nocl = My_Type2(n_of_points, n_of_barch_col, &Tree).tree_(distances).barch_(&Poisk[N_P]).save_(&Poisk[N_P], points);
     }
     else nocl = My_Type2(n_of_points, n_of_barch_col, &Tree).barch_(&Poisk[N_P]).save_(&Poisk[N_P], points);
-    printf("nocl = %d\n",nocl);
-    
+    //printf("nocl = %d\n",nocl);
+
     N_P++;
     return nocl;
 }
 void My_Field::save_Tree(const char* FileName)
 {
-    if (Tree == NULL)
+    if (!have_tree)
     {
         std::cout<<"Cant save Tree of Distances\n";
         return;
