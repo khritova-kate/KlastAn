@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <math.h>
-
 #include "My_Classes.h"
-
-#define pi 3.1415926535897932
 
 using namespace std;
 
@@ -38,7 +32,12 @@ My_Group2D::My_Group2D(double xx, double yy, double DSPxx, double DSPyy, int N):
         for (i=0;i<n;i++) PointList[i] += inaccuracy;
     }
 }
-My_Group2D::~My_Group2D() {delete [] PointList;}
+My_Group2D::~My_Group2D() 
+{
+    //printf("GROUP: deleting\n");
+    delete [] PointList;
+    //printf("GROUP: ok\n");
+}
 My_Group2D::My_Group2D (const My_Group2D& cl)
 {
     x = cl.x; y = cl.y;
@@ -74,9 +73,6 @@ void My_Group2D::AssignNumb()
     NUMBER++; 
     numb = NUMBER;
 }
-//void My_Group2D::ChangeNumb(int num) {numb = num;}
-//void My_Group2D::ChangeN   (int nn ) {n=nn;} 
-//void My_Group2D::ChangePOINT(My_Point2D *p, int i) {PointList[i] = *p;}
 void My_Group2D::AddPointList(int N, My_Point2D*points)
 {
     n=N;
@@ -88,10 +84,7 @@ void My_Group2D::AddPointList(int N, My_Point2D*points)
     }
     for (int i=0;i<n;i++) {PointList[i] = points[i];}
 }
-//int My_Group2D::RetNumb() {return numb;}
 int My_Group2D::RetN   () {return n;}
-//double My_Group2D::RetCentre_x() {return x;}
-//double My_Group2D::RetCentre_y() {return y;}
 My_Point2D* My_Group2D::RetPOINT (int i)   {return &PointList[i];}
 void My_Group2D::MoveCLOUD(My_Point2D *p)
 { 

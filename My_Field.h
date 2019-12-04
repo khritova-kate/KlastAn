@@ -8,6 +8,7 @@ class My_Field
       My_Poisk *Poisk;                          //poiski
       double *distances;                        //rasstoyanie meshdu tochksmi
       My_Point2D **points;                      //ssylki na tochki polja
+      edge* Tree;                               //tree of distances
    public:
 
       // ============================================= creation and simple operations =============================================
@@ -30,6 +31,9 @@ class My_Field
       //void AddPointList(int, int, My_Point2D* );                //dobavlenie tochek v oblako
       void AddCLOUD(double, double, double, double, int );      //dobavlenie oblaka
       void star_sky(double, double, double, double, int );      //ravnomerno zapolnennyj tochkami kvadrat
+      void arc_up  (double, double, double, int, double);
+      void arc_down(double, double, double, int, double);
+      void arc     (double, double, double, int, double);
 
       // ============================================= clust_an :: type 1 =============================================
 
@@ -40,4 +44,25 @@ class My_Field
       void PrintClustFILE(int, int , const char*);
       void PrintAllClustFILE(int, const char*);
       void PrintAllClustTypeFILE(int, const char*);
+
+     // ============================================= clust_an :: type 1 =============================================
+   
+      int Type2(int, bool);
+      void save_Tree(const char*);
+      bool save_barch(int, const char*);
+
+     // ============================================= clust_an :: type 3 ============================================= 
+
+      void find_far_away_points (My_Point2D**, int ) ;   //k>1 !!
+      void k_means(int , bool);
+      bool save_centers (int , const char* );
+
+     // ============================================= clust_an :: type 4 ============================================= 
+
+      void k_means_core(int, int, bool);
+
+     // ============================================= clust_an :: type 5 ============================================= 
+
+      int forel(double, bool);
+      bool save_circles(int, const char*);
 };

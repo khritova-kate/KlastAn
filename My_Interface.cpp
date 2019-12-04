@@ -1,10 +1,4 @@
-#include <sstream>
-#include <cstring>
-#include <fstream>
-//#include <iostream>
-
 #define N_OF_ALG_TYPES 1
-
 #include "My_Interface.h"
 
 using namespace std;
@@ -150,6 +144,7 @@ string itoa(int n)
 }
 
 My_Interface::My_Interface() {limit = 0; limit_p = 0;}
+My_Interface::~My_Interface() {}
 void My_Interface::help_()
 {
     ifstream fin("help.txt");
@@ -169,7 +164,7 @@ void My_Interface::help_()
 }
 string My_Interface::ReadCommand(string comma)
 {
-    if(comma == "") {cout<<"empty input"<<endl; return "EMPTY INPUT";}
+    if(comma == "") return "EMPTY INPUT";
     string FileName1, word;
     ofstream f;
     double D1,D2,D3,D4;
@@ -183,32 +178,60 @@ string My_Interface::ReadCommand(string comma)
     {
         limit++;
         C.createCLOUD(D1,D2,D3,D4,INT1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt = true;
         return "  OK";
     }
     if(parse(comma).str_("STARSKY").double_(D1).double_(D2).double_(D3).double_(D4).int_(INT1).success())
     {
         limit++;
         C.createSTARSKY(D1,D2,D3,D4,INT1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
+    }
+    if(parse(comma).str_("ARC").success())
+    {
+        if(parse(comma).str_("ARC-UP").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
+        {
+            if (D3 < 0) return "error (ARC-UP ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC-UP ... ) :: expected int > 1";
+            limit++;
+            C.createARCup(D1,D2,D3,INT1,D4);
+            need_fill_dst = need_fill_pnt =  true;
+        }
+        if(parse(comma).str_("ARC-DOWN").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
+        {
+            if (D3 < 0) return "error (ARC-DOWN ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC-DOWN ... ) :: expected int > 1";
+            limit++;
+            C.createARCdown(D1,D2,D3,INT1,D4);
+            need_fill_dst = need_fill_pnt =  true;
+        }
+        if(parse(comma).str_("ARC").double_(D1).double_(D2).double_(D3).int_(INT1).double_(D4).success())
+        {
+            if (D3 < 0) return "error (ARC ... ) :: expected red > 0";
+            if (INT1 < 1) return "error (ARC ... ) :: expected int > 1";
+            limit++;
+            C.createARC(D1,D2,D3,INT1,D4);
+            need_fill_dst = need_fill_pnt =  true;
+        }
+        return OK;
     }
     if(parse(comma).str_("TUGR").int_(INT1).double_(D1).success())
     {
         C.turnCLOUD(INT1,D1);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("MOGR").int_(INT1).double_(D1).double_(D2).success())
     {
         C.moveCLOUD(INT1,D1,D2);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("STGR").int_(INT1).double_(D1).double_(D1).success())
     {
         C.stretchCLOUD(INT1,D1,D2);
-        field_chanched = true;
+        need_fill_dst = need_fill_pnt =  true;
         return "  OK";
     }
     if(parse(comma).str_("SHOW").int_(INT1).success())             //!!!
@@ -257,8 +280,8 @@ string My_Interface::ReadCommand(string comma)
     {
         limit_p++;
         if (n_of_poisk > 16) return "error (CONGR dis) :: not enough memory";
-        INT1 = C.ConnCLOUD(D1,field_chanched);
-        field_chanched = false;
+        INT1 = C.ConnCLOUD(D1, need_fill_pnt && need_fill_dst);
+        need_fill_dst = need_fill_pnt = false;
         return "  OK : " + itoa(INT1) + " clusters found";
     }
      if(parse(comma).str_("CL-SHOW").int_(INT1).int_(INT2).success())             //!!!
@@ -313,13 +336,119 @@ string My_Interface::ReadCommand(string comma)
         C.save_all_Clust_type (INT1, FileName1.c_str());
         return "  OK";
     }
-  // ==================================================== type 1 ====================================================
+  // ==================================================== type 2 ====================================================
+    if(parse(comma).str_("SPTREE").int_(INT1).success())
+    {
+        if (INT1 < 2) return "error (SPTREE ...) :: expected int > 1";
+        C.SpanningTree(INT1, need_fill_pnt && need_fill_dst);
+        limit_p++;
+        need_fill_dst = false; need_fill_pnt = false;
+
+        return OK;
+    }
+    if(parse(comma).str_("TREE-SAVE").qrstr_(FileName1).success())
+    {
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (TREE-SAVE ...) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        C.save_Tree(FileName1.c_str());
+
+        return OK;
+    }
+    if(parse(comma).str_("BARCH-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (BARCH-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (BARCH-SAVE ...) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        if ( C.save_barchart(INT1-1, FileName1.c_str()) ) return OK;
+        return "error (BARCH-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";;
+    }
+  // ==================================================== type 3 ====================================================
+    if(parse(comma).str_("K-MEANS").int_(INT1).success())
+    {
+        limit_p++;
+        if(limit == 0) return "error (K-MEANS ... ) : empty Field";
+        if (INT1 < 1) return "error (K-MEANS ... ) : expected int > 0";
+        C.k_means(INT1, need_fill_dst && need_fill_pnt);    
+        need_fill_dst = need_fill_pnt = false;
+        return "  OK";
+    }
+    if(parse(comma).str_("CEN-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (CEN-SAVE ...) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        if ( C.save_k_means_centres(INT1, FileName1.c_str()) ) return "  OK";
+        return "error (CEN-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";
+    }
+  // ==================================================== type 4 ====================================================
+    if (parse(comma).str_("CORE-K-MEANS").int_(INT1).int_(INT2).success())
+    {
+        limit_p++;
+        if(limit == 0) return "error (CORE-K-MEANS ... ) : empty Field";
+        if (INT1 < 1) return "error (CORE-K-MEANS ... ) : expected k > 0";
+        if (INT2 < 1) return "error (CORE-K-MEANS ... ) : expected p > 0";
+        C.k_means_core(INT1,INT2, need_fill_pnt && need_fill_dst);
+        need_fill_dst = need_fill_pnt =  false;
+        return "  OK";
+    }
+  // ==================================================== type 5 ====================================================
+    if (parse(comma).str_("FOREL").double_(D1).success())
+    {
+        limit_p++;
+        if(limit == 0) return "error (FOREL ... ) : empty Field";
+        if(D1<0) return "error (FOREL ... ) : expected double > 0";
+
+        INT1 = C.forel(D1, need_fill_pnt);
+        need_fill_pnt = false;
+
+        return "  OK : " + itoa(INT1) + " clusters found";
+    }
+    if (parse(comma).str_("CIR-SAVE").int_(INT1).qrstr_(FileName1).success())
+    {
+        if (INT1 > limit_p) return "error (CIR-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't exist";
+        int i=0;
+        while ( !( FileName1[i] == '.' && FileName1[i+1] == 't' && FileName1[i+2] == 'x' && FileName1[i+3] == 't' ) ) 
+        {
+            i++;
+            if(i+4 > FileName1.length() ) return "error (CIR-SAVE ... ) :: can't open file " + FileName1;
+        }
+        FileName1.erase(i+4);
+        FileName1 = "saves/" + FileName1;
+        f.open(FileName1.c_str()); f.close();
+
+        if ( C.save_forel_circles(INT1, FileName1.c_str()) ) return "  OK";
+        return "error (CIR-SAVE ... ) : Poisk with number " + itoa(INT1) + " doesn't have proper type";
+    }
     return "NOT SATED COMMAND";
 }
-void My_Interface::do_it(char* argv)
+void My_Interface::do_it(int argc, char* argv)
 {
     int method; bool ne_arg;
-    if(argv == NULL)
+    if(argc == 1)
     {
         cout<<"SELECT HOW TO ENTER COMMANDS >> 1 to read commands from file" << endl << "\t\t\t\t2 to enter commands manually" << endl;
         cout<<"> "; cin>>method;
@@ -343,8 +472,9 @@ void My_Interface::do_it(char* argv)
         do
         {
             comma = buf;
+            cout<<"~ "<<comma<<"\n";
             res = this->ReadCommand(comma);
-            err<<res<<"\n";
+            err<<comma<<" -- "<<res<<"\n";
             cout<<res<<endl;
         } 
         while(!parse(comma).str_("EXIT").success() && f.getline(buf,50) );

@@ -1,23 +1,63 @@
+==============================================================================================================================
+
+======================================================= creating Field =======================================================
+
 CREATE      (double cx, double cy, double DSPx, ||  create Group with centre ('cx','cy'), dispertion('DSPx','DSPy'), number 
-                                                    of points 'N'
-                          double DSPy, int N)       ~ add 1 group to FIELD
+                            double DSPy, int N)     of points 'N'
+                                                    ~ add 1 group to FIELD
 STARSKY     (double xmin, double xmax,          ||  create a Group consisting of 'n' points evenly distributed on a rectangle
               double ymin, double ymax, int n)      ['xmin';'xmax']x['ymin';'ymax']
+                                                    ~ add 1 group to FIELD
+ARC-UP      (double cx, double cy, double r,    ||  create a upper semicircle with centre ('cx','cy'), radius 'r', number
+                               int N, double W)     of points 'N', width 'W'
+                                                    ~ add 1 group to FIELD
+ARC-DOWN    (double cx, double cy, double r,    ||  create a lower semicircle with centre ('cx','cy'), radius 'r', number
+                               int N, double W)     of points 'N', width 'W'
+                                                    ~ add 1 group to FIELD
+ARC         (double cx, double cy, double r,    ||  create a circle with centre ('cx','cy'), radius 'r', number of points
+                               int N, double W)     'N', width 'W'
                                                     ~ add 1 group to FIELD
 
 MOGR        (int number, double px, double py)  ||  move Group with number 'number' to the point ('px','py')
 STGR        (int number, double dx, double dy)  ||  stretch CLOUD with number 'number' on coefficient ('dx','dy')
 TUGR        (int number, double fi)             ||  turn Group with number 'number' angle 'fi'
 
+================================================= cluster analysis algorithms ================================================
+
 CONGR       (double dis)                        ||  find clusters with property: distance between points less than 'dis'
+                                                    ~ add 1 Poisk to FIELD
+SPTREE      (int n_bar)                         ||  find clusters with Spanning Tree algorithm, accuracy: 'n_ber' columns 
+                                                    of the histogram
+                                                    ~ add 1 Poisk to FIELD
+K-MEANS     (int k)                             ||  find clusters with 'k'-means algorithm
+                                                    ~ add 1 Poisk to FIELD
+CORE-K-MEANS(int k, int p)                      ||  find clusters with 'k'-means algorithm with 'p' cores
+                                                    ~ add 1 Poisk to FIELD
+FOREL       (double r)                          ||  find clusters with Formal Elements algorithm, radius 'r'
+                                                    ~ add 1 Poisk to FIELD
+
+=================================================== save groups and clusters =================================================
 
 SHOW        (int num)                           ||  print Group with number 'number'
 SAVE        (int number, string file_name)      ||  save Group with number 'number' in file 'file_name'
 SAVE-ALL    (string file_name)                  ||  save all Groups in file 'file_name'
 
 CL-SHOW     (int num_p, int num_c)              ||  print Cluster with number 'num_c' from Poisk with number 'num_p'
-CL-SAVE     (int num_p, int num_c, string f_n)  ||  save Cluster with number 'num_c' from Poisk with number 'num_p' in file 'f_n'
+CL-SAVE     (int num_p, int num_c, string f_n)  ||  save Cluster with number 'num_c' from Poisk with number 'num_p' 
+                                                                                                                in file 'f_n'
 CL-SAVE-ALL (int num_p, string file_name)       ||  save all Clusters with from Poisk with number 'num_p' in file 'file_name'
 CL-SAVE-TYPE(int type, string file_name)        ||  save all Clusters with type 'type' in file 'file_name'
 
+==================================================== save Poisk attributes ===================================================
+
+TREE-SAVE   (string file_name)                  ||  save spanning tree in file 'file_name'
+BARCH-SAVE  (int num_p, string file_name)       ||  save histogram from Poisk with number 'num_p' in file 'file_name'
+CEN-SAVE    (int num_p, string f_n)             ||  save centers of clusters from Poisk with number 'num_p' in file 'f_n'
+CIR-SAVE    (int num_p, string file_name)       ||  save circles - the boundaries of neighborhoods of formal elements from 
+                                                    Poisk with number 'num_p' in file 'file_name'
+
+==============================================================================================================================
+
 EXIT                                            ||  stop command input (exit) 
+
+==============================================================================================================================

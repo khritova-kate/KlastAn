@@ -1,10 +1,7 @@
 #include "My_Controller.h"
 
-//#include <iostream>
-//using namespace std;
-
 My_Controller::My_Controller () {}
-My_Controller::~My_Controller() {}
+My_Controller::~My_Controller() { }
 //My_Field* My_Controller::RetFIELD() { return &F; }
 void My_Controller::createCLOUD(double cx, double cy, double DSPx, double DSPy, int n)
 {
@@ -13,6 +10,18 @@ void My_Controller::createCLOUD(double cx, double cy, double DSPx, double DSPy, 
 void My_Controller::createSTARSKY(double minx,double maxx,double miny,double maxy, int n) 
 {
     F.star_sky(minx,maxx,miny,maxy,n);
+}
+void My_Controller::createARCup(double x_cen, double y_cen, double rad, int n, double width)
+{
+    F.arc_up(x_cen,y_cen,rad,n,width);
+}
+void My_Controller::createARCdown(double x_cen, double y_cen, double rad, int n, double width)
+{
+    F.arc_down(x_cen,y_cen,rad,n,width);
+}
+void My_Controller::createARC(double x_cen, double y_cen, double rad, int n, double width)
+{
+    F.arc(x_cen,y_cen,rad,n,width);
 }
 void My_Controller::moveCLOUD(int cloud_number, double px, double py)
 {
@@ -34,7 +43,6 @@ void My_Controller::save_CLOUD_in_file(int cloud_number,const char*FileName)
 }
 void My_Controller::save_all_clouds (const char* FileName)
 {
-    //printf("\ngot '%s'\n",FileName);
     F.PrintAllCLinFile_bas(FileName);
 }
 void My_Controller::Print_CLOUD(int num)
@@ -60,4 +68,36 @@ void My_Controller::save_all_Clust (int num_p, const char* FileName)
 void My_Controller::save_all_Clust_type (int type, const char* FileName)
 {
     F.PrintAllClustTypeFILE(type,FileName);
+}
+int My_Controller::SpanningTree (int n_of_barch_col, bool need_pnt_dist)
+{
+    return F.Type2(n_of_barch_col,need_pnt_dist);
+}
+void My_Controller::save_Tree (const char* FileName)
+{
+    F.save_Tree(FileName);
+}
+bool My_Controller::save_barchart (int num_p, const char* FileName)
+{
+    return F.save_barch(num_p, FileName);
+}
+void My_Controller::k_means (int k, bool need_fill_pnt)
+{
+    F.k_means(k, need_fill_pnt);
+}
+bool My_Controller::save_k_means_centres (int num_p, const char* FileName)
+{
+    return F.save_centers(--num_p, FileName);
+}
+void My_Controller::k_means_core (int k, int p, bool need_fill_pnt)
+{
+    F.k_means_core(k,p, need_fill_pnt);
+}
+int My_Controller::forel(double r, bool need_fill_pnt)
+{
+    return F.forel(r, need_fill_pnt);
+}
+bool My_Controller::save_forel_circles (int p_num, const char* FileName)
+{
+    return F.save_circles(--p_num,FileName);
 }
